@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: #0ea5e9;
+      color: white;
+      padding: 20px;
+      border-radius: 10px 10px 0 0;
+    }
+    .content {
+      background: #f9fafb;
+      padding: 30px;
+    }
+    .inquiry-box {
+      background: white;
+      padding: 20px;
+      border-left: 4px solid #0ea5e9;
+      margin: 20px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #0ea5e9;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>New Property Inquiry</h2>
+    </div>
+    <div class="content">
+      <p>Hi {{sellerName}},</p>
+      <p>You have received a new inquiry for <strong>{{propertyTitle}}</strong></p>
+      
+      <div class="inquiry-box">
+        <p><strong>From:</strong> {{clientName}}</p>
+        <p><strong>Message:</strong></p>
+        <p>{{message}}</p>
+      </div>
+
+      <p>
+        <a href="{{viewUrl}}" class="button">View Inquiry</a>
+      </p>
+
+      <p>Respond quickly to increase your chances of closing the deal!</p>
+    </div>
+  </div>
+</body>
+</html>

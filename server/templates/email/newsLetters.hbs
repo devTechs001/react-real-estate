@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+    }
+    .content {
+      background: #f9fafb;
+      padding: 30px;
+    }
+    .property-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .property-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .property-info {
+      padding: 15px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #6366f1;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📬 Real Estate Newsletter</h1>
+      <p>{{monthYear}}</p>
+    </div>
+    <div class="content">
+      <p>Hi {{name}},</p>
+      <p>Here are this month's featured properties and market insights!</p>
+
+      <h2>🏠 Featured Properties</h2>
+      {{#each properties}}
+      <div class="property-card">
+        <img src="{{this.image}}" alt="{{this.title}}" class="property-image">
+        <div class="property-info">
+          <h3>{{this.title}}</h3>
+          <p>{{this.location}}</p>
+          <p><strong>${{this.price}}</strong></p>
+          <p>{{this.bedrooms}} beds • {{this.bathrooms}} baths • {{this.area}} sqft</p>
+          <a href="{{this.url}}" class="button">View Details</a>
+        </div>
+      </div>
+      {{/each}}
+
+      <h2>📊 Market Insights</h2>
+      <p>{{marketInsights}}</p>
+
+      <p style="text-align: center; margin: 30px 0;">
+        <a href="{{browseUrl}}" class="button">Browse All Properties</a>
+      </p>
+
+      <p>Best regards,<br>Real Estate Team</p>
+    </div>
+    <div class="footer">
+      <p>You're receiving this because you subscribed to our newsletter.</p>
+      <p><a href="{{unsubscribeUrl}}">Unsubscribe</a></p>
+      <p>&copy; 2024 Real Estate Platform. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

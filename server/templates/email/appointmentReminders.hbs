@@ -14,7 +14,7 @@
       padding: 20px;
     }
     .header {
-      background: linear-gradient(135deg, #0ea5e9 0%, #a21caf 100%);
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
       color: white;
       padding: 30px;
       text-align: center;
@@ -24,10 +24,16 @@
       background: #f9fafb;
       padding: 30px;
     }
+    .appointment-details {
+      background: white;
+      padding: 20px;
+      border-left: 4px solid #16a34a;
+      margin: 20px 0;
+    }
     .button {
       display: inline-block;
       padding: 12px 30px;
-      background: #0ea5e9;
+      background: #16a34a;
       color: white;
       text-decoration: none;
       border-radius: 5px;
@@ -44,24 +50,28 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Welcome to Real Estate Platform!</h1>
+      <h1>🏠 Appointment Reminder</h1>
     </div>
     <div class="content">
       <p>Hi {{name}},</p>
-      <p>Thank you for joining Real Estate Platform! We're excited to have you on board.</p>
-      <p>With our platform, you can:</p>
-      <ul>
-        <li>Browse thousands of properties</li>
-        <li>Get AI-powered recommendations</li>
-        <li>Schedule property viewings</li>
-        <li>Connect with sellers directly</li>
-        <li>Track your favorite properties</li>
-      </ul>
+      <p>This is a reminder about your upcoming property viewing appointment:</p>
+      
+      <div class="appointment-details">
+        <h3>{{propertyTitle}}</h3>
+        <p><strong>📍 Address:</strong> {{address}}</p>
+        <p><strong>📅 Date:</strong> {{date}}</p>
+        <p><strong>🕐 Time:</strong> {{time}}</p>
+        <p><strong>👤 Contact:</strong> {{sellerName}}</p>
+      </div>
+
+      <p>Please arrive on time. If you need to reschedule or cancel, please do so at least 24 hours in advance.</p>
+
       <p>
-        <a href="{{loginUrl}}" class="button">Get Started</a>
+        <a href="{{appointmentUrl}}" class="button">View Appointment Details</a>
       </p>
-      <p>If you have any questions, feel free to reach out to our support team.</p>
-      <p>Best regards,<br>The Real Estate Team</p>
+
+      <p>Looking forward to seeing you!</p>
+      <p>Best regards,<br>Real Estate Team</p>
     </div>
     <div class="footer">
       <p>&copy; 2024 Real Estate Platform. All rights reserved.</p>

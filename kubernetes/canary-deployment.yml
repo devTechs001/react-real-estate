@@ -1,0 +1,54 @@
+# kubernetes/canary-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-canary
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: frontend
+        track: canary
+        version: v2.0.0
+    spec:
+      containers:
+      - name: frontend
+        image: frontend:v2.0.0
+        env:
+        - name: FEATURE_FLAGS
+          value: "new_ui=true,ai_assistant=beta"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: frontend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "10" # 10% traffic to canary
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80

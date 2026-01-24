@@ -1,0 +1,79 @@
+# docker-compose.microservices.yml
+version: '3.8'
+
+services:
+  # Core Services
+  api-gateway:
+    build: ./services/api-gateway
+    ports: ["80:80", "443:443"]
+    
+  auth-service:
+    build: ./services/auth
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    
+  user-service:
+    build: ./services/users
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/users
+      
+  property-service:
+    build: ./services/properties
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/properties
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      
+  # AI/ML Services  
+  ai-service:
+    build: ./services/ai
+    environment:
+      - TENSORFLOW_SERVING_URL=http://tensorflow-serving:8501
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+  recommendation-service:
+    build: ./services/recommendations
+    environment:
+      - REDIS_URL=redis://redis:6379
+      
+  # Real-time Services
+  messaging-service:
+    build: ./services/messaging
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - SOCKETIO_PORT=3001
+      
+  notification-service:
+    build: ./services/notifications
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - EMAIL_SERVICE_URL=http://email-service:3002
+      
+  # Infrastructure
+  redis:
+    image: redis:7-alpine
+    
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongo_data:/data/db
+      
+  elasticsearch:
+    image: elasticsearch:8.10.0
+    environment:
+      - discovery.type=single-node
+      
+  tensorflow-serving:
+    image: tensorflow/serving:latest
+    volumes:
+      - ./ai-models:/models
+      
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    
+  grafana:
+    image: grafana/grafana:latest
+    
+  jaeger:
+    image: jaegertracing/all-in-one:latest

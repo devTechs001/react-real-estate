@@ -37,6 +37,7 @@ import SellerAnalytics from './pages/seller/Analytics';
 import SellerMessages from './pages/seller/Messages';
 import SellerReviews from './pages/seller/Reviews';
 import Subscriptions from './pages/seller/Subscriptions';
+import Referrals from './pages/seller/Referrals';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -51,6 +52,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import AddProperty from './pages/AddProperty';
 import EditProperty from './pages/EditProperty';
+import InviteLink from './pages/InviteLink';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -72,6 +74,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="properties" element={<Properties />} />
           <Route path="properties/:id" element={<PropertyDetail />} />
+          <Route path="invite/:code" element={<InviteLink />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
@@ -105,6 +108,7 @@ function App() {
             <Route path="messages" element={<RoleBasedRoute allowedRoles={['agent']}><SellerMessages /></RoleBasedRoute>} />
             <Route path="reviews" element={<RoleBasedRoute allowedRoles={['agent']}><SellerReviews /></RoleBasedRoute>} />
             <Route path="subscriptions" element={<RoleBasedRoute allowedRoles={['agent']}><Subscriptions /></RoleBasedRoute>} />
+            <Route path="referrals" element={<RoleBasedRoute allowedRoles={['agent']}><Referrals /></RoleBasedRoute>} />
           </Route>
 
           {/* Admin Routes - Only for 'admin' role */}

@@ -4,7 +4,7 @@ import {
   FaHome, FaChartLine, FaHeart, FaEnvelope, FaCalendar, 
   FaSearch, FaHistory, FaExchangeAlt, FaUser, FaCog,
   FaStar, FaCreditCard, FaUsers, FaFileAlt, FaServer,
-  FaBuilding, FaClipboardList
+  FaBuilding, FaClipboardList, FaLink
 } from 'react-icons/fa';
 import clsx from 'clsx';
 
@@ -39,6 +39,7 @@ const DashboardSidebar = ({ isOpen, onClose }) => {
         { to: '/seller/messages', label: 'Messages', icon: <FaEnvelope /> },
         { to: '/seller/analytics', label: 'Analytics', icon: <FaChartLine /> },
         { to: '/seller/reviews', label: 'Reviews', icon: <FaStar /> },
+        { to: '/seller/referrals', label: 'Referrals', icon: <FaLink /> },
         { to: '/seller/subscriptions', label: 'Subscriptions', icon: <FaCreditCard /> },
       ],
       admin: [

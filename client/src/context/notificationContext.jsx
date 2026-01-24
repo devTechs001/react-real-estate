@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from 'react';
 import { useSocket } from '../hooks/useSocket';
 import { notificationService } from '../services/notificationService';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast'; // TODO: Install react-hot-toast
 
 export const NotificationContext = createContext();
 
@@ -43,12 +43,13 @@ export const NotificationProvider = ({ children }) => {
   const handleNewNotification = (notification) => {
     setNotifications((prev) => [notification, ...prev]);
     setUnreadCount((prev) => prev + 1);
-    
+
     // Show toast notification
-    toast(notification.message, {
-      icon: '🔔',
-      duration: 4000,
-    });
+    // TODO: Uncomment when react-hot-toast is installed
+    // toast(notification.message, {
+    //   icon: '🔔',
+    //   duration: 4000,
+    // });
   };
 
   const markAsRead = async (notificationId) => {

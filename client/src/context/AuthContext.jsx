@@ -36,6 +36,19 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Role checking helper functions
+  const hasRole = (role) => {
+    return user?.role === role;
+  };
+
+  const hasAnyRole = (roles) => {
+    return roles.includes(user?.role);
+  };
+
+  const isAdmin = () => hasRole('admin');
+  const isAgent = () => hasRole('agent');
+  const isUser = () => hasRole('user');
+
   return (
     <AuthContext.Provider
       value={{
@@ -46,6 +59,12 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         isAuthenticated: !!user,
+        // Role helpers
+        hasRole,
+        hasAnyRole,
+        isAdmin,
+        isAgent,
+        isUser,
       }}
     >
       {children}

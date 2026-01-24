@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import SplashScreen from './components/common/SplashScreen';
 import MainLayout from './components/layout/MainLayout';
 import PrivateRoute from './components/common/PrivateRoute';
+import RoleBasedRoute from './components/common/RoleBasedRoute';
 import ChatBot from './components/ai/ChatBot';
 
 // Public Pages
@@ -32,7 +33,15 @@ import ManageAppointments from './pages/seller/ManageAppointments';
 import SellerAnalytics from './pages/seller/Analytics';
 import SellerMessages from './pages/seller/Messages';
 
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/Users';
+import AdminProperties from './pages/admin/Properties';
+import AdminReports from './pages/admin/Reports';
+import AdminSystem from './pages/admin/System';
+
 // Common
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import AddProperty from './pages/AddProperty';
 import EditProperty from './pages/EditProperty';
@@ -60,28 +69,40 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           
+          {/* Dashboard - Redirects to role-specific dashboard */}
+          <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
           {/* AI Routes */}
           <Route path="price-prediction" element={<PricePrediction />} />
           <Route path="market-analytics" element={<MarketAnalytics />} />
           <Route path="recommendations" element={<PrivateRoute><PropertyRecommendations /></PrivateRoute>} />
           
-          {/* Client Routes */}
+          {/* Client Routes - Only for 'user' role */}
           <Route path="client">
-            <Route path="dashboard" element={<PrivateRoute><ClientDashboard /></PrivateRoute>} />
-            <Route path="favorites" element={<PrivateRoute><ClientFavorites /></PrivateRoute>} />
-            <Route path="inquiries" element={<PrivateRoute><ClientInquiries /></PrivateRoute>} />
-            <Route path="appointments" element={<PrivateRoute><ClientAppointments /></PrivateRoute>} />
-            <Route path="messages" element={<PrivateRoute><ClientMessages /></PrivateRoute>} />
+            <Route path="dashboard" element={<RoleBasedRoute allowedRoles={['user']}><ClientDashboard /></RoleBasedRoute>} />
+            <Route path="favorites" element={<RoleBasedRoute allowedRoles={['user']}><ClientFavorites /></RoleBasedRoute>} />
+            <Route path="inquiries" element={<RoleBasedRoute allowedRoles={['user']}><ClientInquiries /></RoleBasedRoute>} />
+            <Route path="appointments" element={<RoleBasedRoute allowedRoles={['user']}><ClientAppointments /></RoleBasedRoute>} />
+            <Route path="messages" element={<RoleBasedRoute allowedRoles={['user']}><ClientMessages /></RoleBasedRoute>} />
           </Route>
-          
-          {/* Seller Routes */}
+
+          {/* Seller Routes - Only for 'agent' role */}
           <Route path="seller">
-            <Route path="dashboard" element={<PrivateRoute><SellerDashboard /></PrivateRoute>} />
-            <Route path="properties" element={<PrivateRoute><ManageProperties /></PrivateRoute>} />
-            <Route path="inquiries" element={<PrivateRoute><ManageInquiries /></PrivateRoute>} />
-            <Route path="appointments" element={<PrivateRoute><ManageAppointments /></PrivateRoute>} />
-            <Route path="analytics" element={<PrivateRoute><SellerAnalytics /></PrivateRoute>} />
-            <Route path="messages" element={<PrivateRoute><SellerMessages /></PrivateRoute>} />
+            <Route path="dashboard" element={<RoleBasedRoute allowedRoles={['agent']}><SellerDashboard /></RoleBasedRoute>} />
+            <Route path="properties" element={<RoleBasedRoute allowedRoles={['agent']}><ManageProperties /></RoleBasedRoute>} />
+            <Route path="inquiries" element={<RoleBasedRoute allowedRoles={['agent']}><ManageInquiries /></RoleBasedRoute>} />
+            <Route path="appointments" element={<RoleBasedRoute allowedRoles={['agent']}><ManageAppointments /></RoleBasedRoute>} />
+            <Route path="analytics" element={<RoleBasedRoute allowedRoles={['agent']}><SellerAnalytics /></RoleBasedRoute>} />
+            <Route path="messages" element={<RoleBasedRoute allowedRoles={['agent']}><SellerMessages /></RoleBasedRoute>} />
+          </Route>
+
+          {/* Admin Routes - Only for 'admin' role */}
+          <Route path="admin">
+            <Route path="dashboard" element={<RoleBasedRoute allowedRoles={['admin']}><AdminDashboard /></RoleBasedRoute>} />
+            <Route path="users" element={<RoleBasedRoute allowedRoles={['admin']}><AdminUsers /></RoleBasedRoute>} />
+            <Route path="properties" element={<RoleBasedRoute allowedRoles={['admin']}><AdminProperties /></RoleBasedRoute>} />
+            <Route path="reports" element={<RoleBasedRoute allowedRoles={['admin']}><AdminReports /></RoleBasedRoute>} />
+            <Route path="system" element={<RoleBasedRoute allowedRoles={['admin']}><AdminSystem /></RoleBasedRoute>} />
           </Route>
           
           {/* Common Protected Routes */}

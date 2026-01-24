@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import Property from '../models/Property.js';
 import Subscription from '../models/Subscription.js';
-import AuditLog from '../models/AuditLog.js';
+import AuditLog from '../models/Auditlog.js';
 
 // @desc    Get dashboard stats
 // @route   GET /api/admin/dashboard-stats

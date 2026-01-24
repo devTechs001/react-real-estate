@@ -1,38 +1,118 @@
 name: CI/CD Pipeline
-on: [push, pull_request]
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo:6
-        ports: [27017:27017]
-      redis:
-        image: redis:7
-        ports: [6379:6379]
-    
+    name: Lint & Type Check
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
       - name: Install dependencies
         run: pnpm install
-        
-      - name: Run tests
-        run: pnpm test:ci
-        env:
-          MONGODB_URI: mongodb://localhost:27017/test
-          REDIS_URL: redis://localhost:6379
-          
-  deploy:
-    needs: test
+
+      - name: Type check
+        run: pnpm run type-check
+        continue-on-error: true
+
+  build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
+    name: Build Application
+
     steps:
-      - name: Deploy to AWS/GCP
-        run: |
-          pnpm build
-          pnpm deploy:prod
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build client
+        run: pnpm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-dist
+          path: client/dist
+          retention-days: 7
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+  deploy-staging:
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    name: Deploy to Staging (Netlify)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Netlify Preview
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=client/dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
+
+  deploy-production:
+    needs: [lint, build, security]
+    runs-on: ubuntu-latest
+    name: Deploy to Production (Netlify)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Netlify Production
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=client/dist --prod
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

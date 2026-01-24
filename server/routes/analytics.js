@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSellerAnalytics, trackPropertyView } from '../controllers/analyticsController.js';
+import { getSellerAnalytics, trackPropertyView } from '../controllers/analyticsControler.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();

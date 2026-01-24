@@ -1,0 +1,50 @@
+# Netlify Configuration for Real Estate Application
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Build command
+  command = "pnpm run build"
+  # Directory containing the built application
+  publish = "client/dist"
+  # Functions directory for serverless functions
+  functions = "server"
+
+# Environment variables
+[build.environment]
+  NODE_VERSION = "18"
+  PNPM_VERSION = "8.6.0"
+
+# Redirects for single-page application
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Custom headers
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+
+# Development settings
+[dev]
+  command = "pnpm run dev"
+  port = 5173
+
+# Context-specific settings
+[context.production]
+  command = "pnpm run build"
+
+[context.deploy-preview]
+  command = "pnpm run build"
+
+[context.branch-deploy]
+  command = "pnpm run build"

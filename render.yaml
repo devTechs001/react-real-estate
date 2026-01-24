@@ -1,0 +1,55 @@
+# Render Deployment Configuration for Real Estate Application
+# https://render.com/docs
+
+# Frontend (Client) - Static Site Service
+services:
+  - type: web
+    name: real-estate-client
+    env: static
+    buildCommand: "cd client && pnpm install && pnpm run build"
+    staticPublishPath: client/dist
+    routes:
+      - path: "/*"
+        destination: "/index.html"
+        matchType: "prefix"
+
+  # Backend (Server) - Web Service
+  - type: web
+    name: real-estate-server
+    env: node
+    plan: standard
+    runtime: node-18
+    buildCommand: "cd server && pnpm install"
+    startCommand: "cd server && pnpm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NODE_VERSION
+        value: 18.0.0
+    autoDeploy: true
+    branched: true
+    rootDir: server
+
+envVars:
+  - key: NODE_ENV
+    value: production
+  - key: VITE_API_URL
+    value: https://real-estate-server.onrender.com
+  - key: MONGODB_URI
+    sync: false
+  - key: JWT_SECRET
+    sync: false
+  - key: CLOUDINARY_NAME
+    sync: false
+  - key: CLOUDINARY_API_KEY
+    sync: false
+  - key: CLOUDINARY_API_SECRET
+    sync: false
+  - key: OPENAI_API_KEY
+    sync: false
+  - key: REDIS_URL
+    sync: false
+
+preDeployCommand: "pnpm run type-check"

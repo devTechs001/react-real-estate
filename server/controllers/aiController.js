@@ -1,4 +1,4 @@
-import openaiService from '../ai/services/openaiService.js';
+import openaiService from '../ai/services/openAiService.js';
 import pricePredictionService from '../ai/services/pricePredictionService.js';
 import recommendationService from '../ai/services/recommendationService.js';
 import fraudDetectionService from '../ai/services/fraudDetectionService.js';

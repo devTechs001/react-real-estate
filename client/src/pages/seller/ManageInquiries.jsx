@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { FaEnvelope, FaReply, FaClock } from 'react-icons/fa';
-import { inquiryService } from '../../services/inquiryService';
+import { inquiryService } from '../../services/InquiryService';
 import Loader from '../../components/common/Loader';
 import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
-import Textarea from '../../components/ui/Textarea';
+import Textarea from '../../components/ui/TextArea';
 import Button from '../../components/ui/Button';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';

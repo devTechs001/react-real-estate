@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaEnvelope, FaReply } from 'react-icons/fa';
-import { inquiryService } from '../../services/inquiryService';
+import { inquiryService } from '../../services/InquiryService';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Loader from '../common/Loader';

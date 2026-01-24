@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { propertyService } from '../../services/propertyService';
+import { propertyService } from '../../services/PropertyService';
 import PropertyCard from './PropertyCard';
 import Loader from '../common/Loader';
 

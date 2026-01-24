@@ -1,33 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaEye, FaHeart, FaEnvelope, FaCalendar, FaChartLine } from 'react-icons/fa';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { analyticsService } from '../../services/analyticsService';
+import { analyticsService } from '../../services/analyticService';
 import Loader from '../../components/common/Loader';
 import toast from 'react-hot-toast';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const Analytics = () => {
   const [analytics, setAnalytics] = useState(null);
@@ -161,25 +136,31 @@ const Analytics = () => {
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Charts - Using placeholders since chart libraries are not installed */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Views Over Time */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-semibold mb-4">Views Over Time</h3>
-          <Line data={viewsChartData} options={{ responsive: true }} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </div>
         </div>
 
         {/* Property Status Distribution */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-semibold mb-4">Property Status</h3>
-          <Doughnut data={statusDistributionData} options={{ responsive: true }} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </div>
         </div>
       </div>
 
       {/* Top Performing Properties */}
       <div className="bg-white rounded-xl shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4">Top Performing Properties</h3>
-        <Bar data={propertyPerformanceData} options={{ responsive: true }} />
+        <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+          <p className="text-gray-500">Chart visualization would appear here</p>
+        </div>
       </div>
 
       {/* Detailed Table */}

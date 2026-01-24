@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Input from '../ui/Input';
-import Textarea from '../ui/Textarea';
+import Textarea from '../ui/TextArea';
 import Select from '../ui/Select';
 import Button from '../ui/Button';
 import { useAuth } from '../../hooks/useAuth';

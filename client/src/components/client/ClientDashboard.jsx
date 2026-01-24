@@ -8,7 +8,7 @@ import {
   FaChartLine,
 } from 'react-icons/fa';
 import { favoriteService } from '../../services/favoriteService';
-import { inquiryService } from '../../services/inquiryService';
+import { inquiryService } from '../../services/InquiryService';
 import { appointmentService } from '../../services/appointmentService';
 import { aiService } from '../../services/aiService';
 import PropertyCard from '../property/PropertyCard';

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { propertyService } from '../services/propertyService';
+import { propertyService } from '../services/PropertyService';
 import PropertyCard from '../components/property/PropertyCard';
 import Loader from '../components/common/Loader';
 import SEO from '../components/common/SEO';

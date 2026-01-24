@@ -4,7 +4,7 @@ import { favoriteService } from '../../services/favoriteService';
 import PropertyCard from '../../components/property/PropertyCard';
 import Loader from '../../components/common/Loader';
 import Modal from '../../components/ui/Modal';
-import Textarea from '../../components/ui/Textarea';
+import Textarea from '../../components/ui/TextArea';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import toast from 'react-hot-toast';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaEnvelope, FaClock, FaCheckCircle } from 'react-icons/fa';
-import { inquiryService } from '../../services/inquiryService';
+import { inquiryService } from '../../services/InquiryService';
 import Loader from '../../components/common/Loader';
 import Badge from '../../components/ui/Badge';
 import { formatDistanceToNow } from 'date-fns';

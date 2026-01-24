@@ -8,8 +8,8 @@ import {
   FaChartLine,
   FaDollarSign,
 } from 'react-icons/fa';
-import { propertyService } from '../../services/propertyService';
-import { inquiryService } from '../../services/inquiryService';
+import { propertyService } from '../../services/PropertyService';
+import { inquiryService } from '../../services/InquiryService';
 import { appointmentService } from '../../services/appointmentService';
 import Loader from '../common/Loader';
 

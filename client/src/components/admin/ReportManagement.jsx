@@ -4,7 +4,7 @@ import api from '../../services/api';
 import Loader from '../common/Loader';
 import Badge from '../ui/Badge';
 import Modal from '../ui/Modal';
-import Textarea from '../ui/Textarea';
+import Textarea from '../ui/TextArea';
 import Button from '../ui/Button';
 import toast from 'react-hot-toast';
 

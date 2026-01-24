@@ -4,7 +4,7 @@ import SplashScreen from './components/common/SplashScreen';
 import MainLayout from './components/layout/MainLayout';
 import PrivateRoute from './components/common/PrivateRoute';
 import RoleBasedRoute from './components/common/RoleBasedRoute';
-import ChatBot from './components/ai/ChatBot';
+import ChatBot from './components/ai/Chatbot';
 
 // Public Pages
 import Home from './pages/Home';
@@ -15,7 +15,7 @@ import Register from './pages/Register';
 
 // AI Pages
 import PricePrediction from './components/ai/PricePrediction';
-import MarketAnalytics from './components/ai/MarketAnalytics';
+import MarketAnalytics from './components/ai/MarketAnalysis';
 import PropertyRecommendations from './components/ai/PropertyRecommendations';
 
 // Client Pages

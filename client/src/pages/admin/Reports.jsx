@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaDownload, FaFileExport, FaChartBar, FaCalendar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { Line, Bar, Pie } from 'react-chartjs-2';
 import Loader from '../../components/common/Loader';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
@@ -47,6 +46,7 @@ const Reports = () => {
 
   if (loading) return <Loader fullScreen />;
 
+  // Placeholder chart data
   const propertyStatsData = {
     labels: reports?.propertyStats?.map((s) => s.month) || [],
     datasets: [
@@ -137,21 +137,27 @@ const Reports = () => {
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Charts - Using placeholders since chart libraries are not installed */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-xl font-semibold mb-4">Property Listings Trend</h3>
-          <Line data={propertyStatsData} options={{ responsive: true }} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-xl font-semibold mb-4">User Activity</h3>
-          <Pie data={userActivityData} options={{ responsive: true }} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6 lg:col-span-2">
           <h3 className="text-xl font-semibold mb-4">Revenue Overview</h3>
-          <Bar data={revenueData} options={{ responsive: true }} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
-import Textarea from '../components/ui/Textarea';
+import Textarea from '../components/ui/TextArea';
 import toast from 'react-hot-toast';
 import SEO from '../components/common/SEO';
 

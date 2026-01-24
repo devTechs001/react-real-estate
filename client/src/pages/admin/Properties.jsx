@@ -3,7 +3,7 @@ import { FaSearch, FaCheck, FaTimes, FaEye } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Loader from '../../components/common/Loader';
 import Badge from '../../components/ui/Badge';
-import Pagination from '../../components/common/Pagination';
+import Pagination from '../../components/ui/Pagination';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 

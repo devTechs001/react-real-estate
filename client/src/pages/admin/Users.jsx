@@ -5,7 +5,7 @@ import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import Select from '../../components/ui/Select';
-import Pagination from '../../components/common/Pagination';
+import Pagination from '../../components/ui/Pagination';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 

@@ -12,7 +12,7 @@ import {
   FaPhone,
   FaEnvelope,
 } from 'react-icons/fa';
-import { propertyService } from '../services/propertyService';
+import { propertyService } from '../services/PropertyService';
 import { favoriteService } from '../services/favoriteService';
 import PropertyImageGallery from '../components/property/PropertyImageGallery';
 import PropertyMap from '../components/property/PropertyMap';

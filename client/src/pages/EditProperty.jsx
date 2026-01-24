@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { propertyService } from '../services/propertyService';
+import { propertyService } from '../services/PropertyService';
 import PropertyForm from '../components/forms/PropertyForm';
 import Loader from '../components/common/Loader';
 import toast from 'react-hot-toast';

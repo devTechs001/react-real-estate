@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropertyCard from './PropertyCard';
 import Loader from '../common/Loader';
-import Pagination from '../common/Pagination';
+import Pagination from '../ui/Pagination';
 import { FaThLarge, FaList } from 'react-icons/fa';
 
 const PropertyGrid = ({ 

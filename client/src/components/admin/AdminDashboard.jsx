@@ -8,7 +8,6 @@ import {
   FaTrendingUp,
   FaTrendingDown,
 } from 'react-icons/fa';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import Loader from '../common/Loader';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
@@ -159,21 +158,21 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Charts - Using placeholders since chart libraries are not installed */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* User Growth */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-semibold mb-4">User Growth</h3>
-          <div className="h-64">
-            <Line data={userGrowthData} options={chartOptions} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
           </div>
         </div>
 
         {/* Properties by Type */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-semibold mb-4">Properties by Type</h3>
-          <div className="h-64">
-            <Doughnut data={propertyByTypeData} options={chartOptions} />
+          <div className="h-64 bg-gray-100 rounded flex items-center justify-center">
+            <p className="text-gray-500">Chart visualization would appear here</p>
           </div>
         </div>
       </div>

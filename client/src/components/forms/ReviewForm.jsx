@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import Button from '../ui/Button';
-import Textarea from '../ui/Textarea';
+import Textarea from '../ui/TextArea';
 
 const ReviewForm = ({ onSubmit, onCancel }) => {
   const [rating, setRating] = useState(0);

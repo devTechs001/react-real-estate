@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import PropertyGrid from '../components/property/PropertyGrid';
 import PropertyFilter from '../components/property/PropertyFilter';
 import SearchForm from '../components/forms/SearchForm';
-import { propertyService } from '../services/propertyService';
+import { propertyService } from '../services/PropertyService';
 import { SORT_OPTIONS } from '../constants';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';

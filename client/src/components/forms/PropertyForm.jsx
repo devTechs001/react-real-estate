@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { FaUpload, FaTimes } from 'react-icons/fa';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
-import Textarea from '../ui/Textarea';
+import Textarea from '../ui/TextArea';
 import Checkbox from '../ui/Checkbox';
 import Button from '../ui/Button';
 import { PROPERTY_TYPES, LISTING_TYPES, AMENITIES } from '../../constants';

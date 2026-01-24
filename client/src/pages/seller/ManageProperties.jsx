@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaToggleOn, FaToggleOff } from 'react-icons/fa';
-import { propertyService } from '../../services/propertyService';
+import { propertyService } from '../../services/PropertyService';
 import Loader from '../../components/common/Loader';
 import Badge from '../../components/ui/Badge';
 import ConfirmDialog from '../../components/common/ConfirmDialog';

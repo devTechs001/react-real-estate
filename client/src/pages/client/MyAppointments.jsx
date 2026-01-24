@@ -10,7 +10,7 @@ import { appointmentService } from '../../services/appointmentService';
 import Loader from '../../components/common/Loader';
 import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
-import Textarea from '../../components/ui/Textarea';
+import Textarea from '../../components/ui/TextArea';
 import Button from '../../components/ui/Button';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';

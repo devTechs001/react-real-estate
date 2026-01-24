@@ -5,8 +5,8 @@ import {
   FaDollarSign,
   FaExclamationTriangle,
   FaChartLine,
-  FaTrendingUp,
-  FaTrendingDown,
+  FaArrowUp,
+  FaArrowDown,
 } from 'react-icons/fa';
 import Loader from '../common/Loader';
 import api from '../../services/api';
@@ -139,9 +139,9 @@ const AdminDashboard = () => {
               </div>
               <div className="flex items-center gap-1">
                 {stat.trend === 'up' ? (
-                  <FaTrendingUp className="text-green-600" />
+                  <FaArrowUp className="text-green-600" />
                 ) : (
-                  <FaTrendingDown className="text-red-600" />
+                  <FaArrowDown className="text-red-600" />
                 )}
                 <span
                   className={`text-sm font-medium ${

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaLink, FaHome, FaUser, FaArrowRight } from 'react-icons/fa';
-import { referralService } from '../../services/referralService';
-import { useAuth } from '../../hooks/useAuth';
-import Loader from '../../components/common/Loader';
-import Button from '../../components/ui/Button';
+import { referralService } from '@/services/referralService';
+import { useAuth } from '@/hooks/useAuth';
+import Loader from '@/components/common/Loader';
+import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 const InviteLink = () => {

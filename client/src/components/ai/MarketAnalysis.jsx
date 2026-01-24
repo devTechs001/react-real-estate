@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   FaChartBar,
-  FaTrendingUp,
-  FaTrendingDown,
+  FaArrowUp,
+  FaArrowDown,
   FaInfoCircle,
 } from 'react-icons/fa';
 import { aiService } from '../../services/aiService';
@@ -135,9 +135,9 @@ const MarketAnalytics = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-600">Trend</span>
                 {analytics.trend.trend === 'increasing' ? (
-                  <FaTrendingUp className="text-green-500" />
+                  <FaArrowUp className="text-green-500" />
                 ) : analytics.trend.trend === 'decreasing' ? (
-                  <FaTrendingDown className="text-red-500" />
+                  <FaArrowDown className="text-red-500" />
                 ) : (
                   <FaInfoCircle className="text-gray-400" />
                 )}

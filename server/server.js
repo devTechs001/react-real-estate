@@ -12,37 +12,6 @@ import initSocket from './config/socket.js';
 import pricePredictionService from './ai/services/pricePredictionService.js';
 
 // Routes
-import express from 'express';
-import authRoutes from './auth.js';
-import propertyRoutes from './properties.js';
-import userRoutes from './users.js';
-import reviewRoutes from './reviews.js';
-import aiRoutes from './ai.js';
-import messageRoutes from './messages.js';
-import inquiryRoutes from './inquiries.js';
-import appointmentRoutes from './appointments.js';
-import favoriteRoutes from './favorites.js';
-import notificationRoutes from './notifications.js';
-import analyticsRoutes from './analytics.js';
-import adminRoutes from './admin.js';
-
-const router = express.Router();
-
-router.use('/auth', authRoutes);
-router.use('/properties', propertyRoutes);
-router.use('/users', userRoutes);
-router.use('/reviews', reviewRoutes);
-router.use('/ai', aiRoutes);
-router.use('/messages', messageRoutes);
-router.use('/inquiries', inquiryRoutes);
-router.use('/appointments', appointmentRoutes);
-router.use('/favorites', favoriteRoutes);
-router.use('/notifications', notificationRoutes);
-router.use('/analytics', analyticsRoutes);
-router.use('/admin', adminRoutes);
-
-export default router;
-
 import authRoutes from './routes/auth.js';
 import propertyRoutes from './routes/properties.js';
 import userRoutes from './routes/users.js';
@@ -52,7 +21,12 @@ import messageRoutes from './routes/messages.js';
 import inquiryRoutes from './routes/inquiries.js';
 import appointmentRoutes from './routes/appointments.js';
 import favoriteRoutes from './routes/favorites.js';
-import notificationRoutes from './routes/notifications.js';
+import notificationRoutes from './routes/notification.js';
+import analyticsRoutes from './routes/analytics.js';
+import adminRoutes from './routes/admin.js';
+import savedSearchRoutes from './routes/savedSearches.js';
+import paymentRoutes from './routes/payments.js';
+import uploadRoutes from './routes/upload.js';
 
 dotenv.config();
 
@@ -114,6 +88,11 @@ app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/saved-searches', savedSearchRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error Handler
 app.use(errorHandler);

@@ -56,4 +56,28 @@ export const propertyService = {
     const response = await api.get('/properties/featured');
     return response.data;
   },
+
+  // Get view history
+  getViewHistory: async (params) => {
+    const response = await api.get('/properties/view-history', { params });
+    return response.data;
+  },
+
+  // Clear view history
+  clearViewHistory: async () => {
+    const response = await api.delete('/properties/view-history');
+    return response.data;
+  },
+
+  // Remove from view history
+  removeFromViewHistory: async (id) => {
+    const response = await api.delete(`/properties/view-history/${id}`);
+    return response.data;
+  },
+
+  // Get similar properties
+  getSimilarProperties: async (id) => {
+    const response = await api.get(`/properties/${id}/similar`);
+    return response.data;
+  },
 };

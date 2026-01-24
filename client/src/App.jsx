@@ -24,6 +24,9 @@ import ClientFavorites from './pages/client/Favorites';
 import ClientInquiries from './pages/client/MyInquiries';
 import ClientAppointments from './pages/client/MyAppointments';
 import ClientMessages from './pages/client/Messages';
+import SavedSearches from './pages/client/SavedSearches';
+import ViewHistory from './pages/client/ViewHistory';
+import Comparison from './pages/client/Comparison';
 
 // Seller Pages
 import SellerDashboard from './components/seller/SellerDashboard';
@@ -32,6 +35,8 @@ import ManageInquiries from './pages/seller/ManageInquiries';
 import ManageAppointments from './pages/seller/ManageAppointments';
 import SellerAnalytics from './pages/seller/Analytics';
 import SellerMessages from './pages/seller/Messages';
+import SellerReviews from './pages/seller/Reviews';
+import Subscriptions from './pages/seller/Subscriptions';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -43,6 +48,7 @@ import AdminSystem from './pages/admin/System';
 // Common
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import AddProperty from './pages/AddProperty';
 import EditProperty from './pages/EditProperty';
 import NotFound from './pages/NotFound';
@@ -84,6 +90,9 @@ function App() {
             <Route path="inquiries" element={<RoleBasedRoute allowedRoles={['user']}><ClientInquiries /></RoleBasedRoute>} />
             <Route path="appointments" element={<RoleBasedRoute allowedRoles={['user']}><ClientAppointments /></RoleBasedRoute>} />
             <Route path="messages" element={<RoleBasedRoute allowedRoles={['user']}><ClientMessages /></RoleBasedRoute>} />
+            <Route path="saved-searches" element={<RoleBasedRoute allowedRoles={['user']}><SavedSearches /></RoleBasedRoute>} />
+            <Route path="view-history" element={<RoleBasedRoute allowedRoles={['user']}><ViewHistory /></RoleBasedRoute>} />
+            <Route path="comparison" element={<RoleBasedRoute allowedRoles={['user']}><Comparison /></RoleBasedRoute>} />
           </Route>
 
           {/* Seller Routes - Only for 'agent' role */}
@@ -94,6 +103,8 @@ function App() {
             <Route path="appointments" element={<RoleBasedRoute allowedRoles={['agent']}><ManageAppointments /></RoleBasedRoute>} />
             <Route path="analytics" element={<RoleBasedRoute allowedRoles={['agent']}><SellerAnalytics /></RoleBasedRoute>} />
             <Route path="messages" element={<RoleBasedRoute allowedRoles={['agent']}><SellerMessages /></RoleBasedRoute>} />
+            <Route path="reviews" element={<RoleBasedRoute allowedRoles={['agent']}><SellerReviews /></RoleBasedRoute>} />
+            <Route path="subscriptions" element={<RoleBasedRoute allowedRoles={['agent']}><Subscriptions /></RoleBasedRoute>} />
           </Route>
 
           {/* Admin Routes - Only for 'admin' role */}
@@ -107,6 +118,7 @@ function App() {
           
           {/* Common Protected Routes */}
           <Route path="profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
           <Route path="add-property" element={<PrivateRoute><AddProperty /></PrivateRoute>} />
           <Route path="edit-property/:id" element={<PrivateRoute><EditProperty /></PrivateRoute>} />
           

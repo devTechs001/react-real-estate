@@ -67,30 +67,32 @@ const Properties = () => {
         description="Browse our extensive collection of properties for sale and rent"
       />
 
-      <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-12">
-        <div className="container-custom">
-          <h1 className="text-4xl font-bold mb-4">Find Your Dream Property</h1>
-          <p className="text-xl mb-6">
-            Browse {properties.length > 0 && `${totalPages * 12}+`} properties across
-            the country
-          </p>
+      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white py-16">
+        <div className="container-custom px-4">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl font-bold font-display mb-4 drop-shadow-lg">Find Your Dream Property</h1>
+            <p className="text-xl md:text-2xl mb-8 text-white/90 drop-shadow-md">
+              Browse {properties.length > 0 && `${totalPages * 12}+`} premium properties across
+              the country
+            </p>
+          </div>
           <SearchForm />
         </div>
       </div>
 
-      <div className="container-custom py-8">
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="container-custom py-12 px-4">
+        <div className="flex flex-col md:flex-row gap-8 mb-8">
           <PropertyFilter
             onFilterChange={handleFilterChange}
             initialFilters={Object.fromEntries(searchParams)}
           />
 
-          <div className="flex-1 flex items-center justify-end gap-4">
-            <label className="text-sm text-gray-600">Sort by:</label>
+          <div className="flex-1 flex items-center justify-between gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200">
+            <label className="text-sm font-semibold text-slate-700">Sort by:</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="input w-auto"
+              className="px-4 py-2 rounded-lg border-2 border-blue-300 bg-white text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>

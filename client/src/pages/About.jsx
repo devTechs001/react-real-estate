@@ -37,46 +37,46 @@ const About = () => {
         description="Learn about our mission to revolutionize real estate with AI-powered solutions"
       />
 
-      <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20">
-        <div className="container-custom text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Us</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            We're on a mission to revolutionize the real estate industry with
-            cutting-edge technology and exceptional service.
+      <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2"></div>
+        <div className="container-custom text-center relative z-10 px-4">
+          <h1 className="text-5xl md:text-6xl font-bold font-display mb-4 drop-shadow-lg">About RealEstateHub</h1>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-white/90 drop-shadow-md">
+            We're revolutionizing real estate with cutting-edge technology and exceptional service
           </p>
         </div>
       </div>
 
-      <div className="container-custom py-16">
+      <div className="container-custom py-20 px-4">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <stat.icon className="text-3xl text-primary-600" />
+              <div className="bg-gradient-to-br from-blue-100 to-indigo-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <stat.icon className="text-4xl text-blue-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-2">
+              <div className="text-4xl font-bold text-slate-900 mb-2">
                 {stat.value}
               </div>
-              <div className="text-gray-600">{stat.label}</div>
+              <div className="text-slate-600 font-medium">{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* Mission */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
-          <p className="text-lg text-gray-600">
-            We believe everyone deserves to find their perfect property with ease
-            and confidence. By combining innovative AI technology with personal
-            touch, we're making real estate accessible, transparent, and efficient
-            for everyone.
+        <div className="max-w-3xl mx-auto text-center mb-20 bg-gradient-to-b from-blue-50 to-indigo-50 p-12 rounded-3xl border border-blue-200">
+          <h2 className="text-4xl font-bold font-display text-slate-900 mb-6">Our Mission</h2>
+          <p className="text-xl text-slate-700 leading-relaxed">
+            We believe everyone deserves to find their perfect property with ease and confidence. 
+            By combining innovative AI technology with personalized service, we're making real estate 
+            accessible, transparent, and efficient for everyone.
           </p>
         </div>
 
         {/* Team */}
         <div>
-          <h2 className="text-3xl font-bold text-center mb-12">Our Team</h2>
+          <h2 className="text-4xl font-bold font-display text-slate-900 text-center mb-4">Meet Our Expert Team</h2>
+          <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">Experienced professionals dedicated to your success</p>
           <div className="grid md:grid-cols-3 gap-8">
             {team.map((member, index) => (
               <div key={index} className="text-center">

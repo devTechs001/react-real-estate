@@ -50,69 +50,88 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section with Background Image */}
-      <section className="relative text-white py-20 md:py-40 overflow-hidden">
-        {/* Background with gradient overlay */}
+      {/* Hero Section */}
+      <section className="relative text-white py-24 md:py-32 overflow-hidden">
+        {/* Animated gradient background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-secondary-600/90 z-10" />
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 z-10" />
+          <motion.div
+            animate={{ backgroundPosition: '200% center' }}
+            transition={{ duration: 20, repeat: Infinity, repeatType: 'reverse' }}
+            className="absolute inset-0"
             style={{
-              backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.05);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /></linearGradient><pattern id="dots" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)" /></pattern></defs><rect width="1200" height="600" fill="url(%23grad)"/><rect width="1200" height="600" fill="url(%23dots)"/></svg>')`,
+              backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+              backgroundSize: '200% 100%',
             }}
           />
         </div>
 
         {/* Content */}
-        <div className="container-custom relative z-20">
+        <div className="container-custom relative z-20 px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.7 }}
+            className="text-center max-w-5xl mx-auto"
           >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="inline-block mb-4"
+            >
+              <span className="px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-sm font-medium text-white/90">
+                Welcome to RealEstateHub
+              </span>
+            </motion.div>
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-5xl md:text-7xl font-bold font-display mb-4 leading-tight"
+              transition={{ delay: 0.2, duration: 0.7 }}
+              className="text-5xl md:text-7xl font-bold font-display mb-6 leading-tight drop-shadow-lg"
             >
-              Find Your Dream <span className="text-yellow-300">Property</span>
+              Find Your Perfect <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-300">Property</span>
             </motion.h1>
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-xl md:text-2xl mb-10 text-white/90 max-w-2xl mx-auto"
+              transition={{ delay: 0.3, duration: 0.7 }}
+              className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md"
             >
-              Discover thousands of exceptional homes and connect with expert real estate professionals
+              Explore thousands of exceptional homes and connect with expert real estate professionals
             </motion.p>
             
-            {/* Search Bar */}
+            {/* Enhanced Search Bar */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex flex-col md:flex-row gap-2 max-w-3xl mx-auto shadow-2xl"
+              transition={{ delay: 0.4, duration: 0.7 }}
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-1.5 flex flex-col md:flex-row gap-1.5 max-w-4xl mx-auto shadow-2xl border border-white/20"
             >
               <input
                 type="text"
-                placeholder="Enter location or property type..."
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none bg-white/50 placeholder-gray-600"
+                placeholder="Search by location, property type..."
+                className="flex-1 px-6 py-4 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white placeholder-slate-500 font-medium"
               />
-              <select className="px-4 py-3 rounded-lg text-gray-900 focus:outline-none bg-white/50">
+              <select className="px-6 py-4 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/90 font-medium cursor-pointer">
                 <option>All Types</option>
                 <option>Apartment</option>
                 <option>House</option>
                 <option>Villa</option>
                 <option>Commercial</option>
               </select>
-              <Link to="/properties" className="btn btn-primary md:px-8 whitespace-nowrap">
+              <Link to="/properties" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl flex items-center gap-2 whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-200">
                 <FaSearch /> Search
               </Link>
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Floating elements */}
+        <motion.div animate={{ y: [0, 20, 0] }} transition={{ duration: 4, repeat: Infinity }} className="absolute top-20 right-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
+        <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 5, repeat: Infinity, delay: 0.5 }} className="absolute -bottom-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </section>
 
       {/* Property Showcase Gallery */}
@@ -219,29 +238,38 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="section-title">Why Choose Us</h2>
-            <p className="section-subtitle">
-              We provide the best service to help you find your dream property
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2"></div>
+        
+        <div className="container-custom relative z-10 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-slate-900 mb-4">Why Choose RealEstateHub?</h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Everything you need to find, buy, or sell properties with confidence
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white p-6 rounded-xl text-center hover:shadow-lg transition-shadow"
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                className="group p-8 rounded-2xl border border-slate-200 hover:border-blue-500 bg-white hover:bg-blue-50/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-blue-200/50"
               >
-                <div className="text-primary-600 mb-4 flex justify-center">
+                <div className="text-5xl text-blue-600 mb-4 group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -249,18 +277,19 @@ const Home = () => {
       </section>
 
       {/* Featured Properties */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container-custom">
+      <section className="py-20 bg-gradient-to-b from-white via-slate-50 to-slate-100">
+        <div className="container-custom px-4">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="section-title text-4xl mb-4">Latest Listings</h2>
-            <p className="section-subtitle text-lg">
-              Newly added properties in your area
+            <span className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">Featured Collections</span>
+            <h2 className="text-4xl md:text-5xl font-bold font-display text-slate-900 mb-4">Latest Premium Listings</h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Handpicked properties from our verified sellers
             </p>
           </motion.div>
 
@@ -268,17 +297,31 @@ const Home = () => {
             <Loader />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredProperties.map((property) => (
-                <PropertyCard key={property._id} property={property} />
+              {featuredProperties.map((property, index) => (
+                <motion.div
+                  key={property._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <PropertyCard property={property} />
+                </motion.div>
               ))}
             </div>
           )}
 
-          <div className="text-center mt-12">
-            <Link to="/properties" className="btn btn-primary">
-              View All Properties
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-16"
+          >
+            <Link to="/properties" className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+              Explore All Properties <FaArrowRight className="text-lg" />
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 

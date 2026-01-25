@@ -24,16 +24,16 @@ const SplashScreen = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden z-50">
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-secondary-600 to-primary-700">
-        <div className="absolute inset-0 opacity-30">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
+        <div className="absolute inset-0 opacity-40">
           <motion.div
             initial={{ backgroundPosition: '0% 0%' }}
             animate={{ backgroundPosition: '100% 100%' }}
-            transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse' }}
+            transition={{ duration: 12, repeat: Infinity, repeatType: 'reverse' }}
             className="w-full h-full"
             style={{
-              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.15) 0%, transparent 50%)',
               backgroundSize: '200% 200%',
             }}
           />
@@ -48,41 +48,45 @@ const SplashScreen = () => {
           animate="visible"
           className="text-center max-w-2xl mx-auto px-4"
         >
-          {/* Logo/Icon */}
+          {/* Animated Logo Icon */}
           <motion.div
             variants={itemVariants}
-            className="mb-8"
+            className="mb-10"
           >
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
             >
-              <div className="inline-block p-6 bg-white/10 backdrop-blur-md rounded-full mb-4 border border-white/20">
-                <FaHome className="text-white text-6xl" />
+              <div className="inline-block p-8 bg-white/20 backdrop-blur-xl rounded-3xl mb-6 border border-white/30 shadow-2xl">
+                <FaHome className="text-white text-7xl" />
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Title */}
-          <motion.div variants={itemVariants}>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-2 font-display tracking-tight">
-              HomeHub
+          {/* Main Title */}
+          <motion.div variants={itemVariants} className="mb-4">
+            <h1 className="text-6xl md:text-7xl font-bold text-white mb-3 font-display tracking-tight drop-shadow-lg">
+              RealEstate<span className="text-cyan-300">Hub</span>
             </h1>
-            <div className="h-1 w-24 bg-white/30 mx-auto rounded-full mb-6" />
+            <motion.div 
+              animate={{ scaleX: [0, 1] }}
+              transition={{ duration: 1.5 }}
+              className="h-1 w-32 bg-gradient-to-r from-cyan-300 to-blue-300 mx-auto rounded-full mb-6" 
+            />
           </motion.div>
 
           {/* Subtitle */}
           <motion.p
             variants={itemVariants}
-            className="text-white text-lg md:text-xl mb-2 font-light"
+            className="text-white/90 text-xl md:text-2xl mb-3 font-light drop-shadow-md"
           >
-            Find Your Dream Property
+            Find Your Dream Property Today
           </motion.p>
           <motion.p
             variants={itemVariants}
-            className="text-white/70 text-base md:text-lg mb-12"
+            className="text-white/70 text-base md:text-lg font-light drop-shadow-md"
           >
-            Discover amazing homes and connect with top real estate agents
+            Discover thousands of properties tailored to your needs
           </motion.p>
 
           {/* Loading Animation */}

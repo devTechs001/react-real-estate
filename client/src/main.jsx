@@ -3,19 +3,19 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
-// import { HelmetProvider } from 'react-helmet-async'; // TODO: Install react-helmet-async
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { PropertyProvider } from './context/PropertyContext';
 import { SocketProvider } from './context/SocketContext';
 import { NotificationProvider } from './context/notificationContext';
 import { ComparisonProvider } from './context/ComparisonContext';
-// import { Toaster } from 'react-hot-toast'; // TODO: Install react-hot-toast
+import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from './components/common/ErroBoundary';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      {/* <HelmetProvider> */}
+      <HelmetProvider>
         <BrowserRouter>
           <AuthProvider>
             <SocketProvider>
@@ -23,7 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <PropertyProvider>
                   <ComparisonProvider>
                     <App />
-                    {/* <Toaster
+                    <Toaster
                       position="top-right"
                       toastOptions={{
                         duration: 3000,
@@ -46,14 +46,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                           },
                         },
                       }}
-                    /> */}
+                    />
                   </ComparisonProvider>
                 </PropertyProvider>
               </NotificationProvider>
             </SocketProvider>
           </AuthProvider>
         </BrowserRouter>
-      {/* </HelmetProvider> */}
+      </HelmetProvider>
     </ErrorBoundary>
   </React.StrictMode>
 );

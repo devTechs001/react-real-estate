@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FaUsers, FaHome, FaAward, FaHandshake, FaTarget, FaLightbulb, FaHeart, FaTrophy, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaUsers, FaHome, FaAward, FaHandshake, FaBullseye, FaLightbulb, FaHeart, FaTrophy, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import SEO from '../components/common/SEO';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ const About = () => {
 
   const values = [
     {
-      icon: <FaTarget className="text-4xl text-blue-600" />,
+      icon: <FaBullseye className="text-4xl text-blue-600" />,
       title: 'Customer Focus',
       description: 'Your success is our mission. We prioritize your needs above everything else.',
     },

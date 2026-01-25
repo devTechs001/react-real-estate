@@ -5,7 +5,7 @@ import {
   subscriptionPlans,
   createSubscription,
   cancelSubscription as cancelStripeSubscription,
-} from '../config/payment.js';
+} from '../config/payments.js';
 
 // @desc    Create subscription
 // @route   POST /api/payments/create-subscription

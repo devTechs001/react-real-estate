@@ -121,7 +121,7 @@ const Contact = () => {
       />
 
       {/* Hero Section */}
-      <div className="pt-24 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20 relative overflow-hidden">
+      <div className="pt-24 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <motion.div
             animate={{ backgroundPosition: '200% center' }}
@@ -140,7 +140,15 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <h1 className="text-5xl md:text-6xl font-bold font-display mb-6">Get In Touch</h1>
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="inline-block px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-sm font-medium text-white/90 mb-4"
+            >
+              We're Here to Help
+            </motion.span>
+            <h1 className="text-5xl md:text-7xl font-bold font-display mb-6 leading-tight">Get In Touch</h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto text-white/90">
               Have questions? Our expert team is here to help you 24/7
             </p>

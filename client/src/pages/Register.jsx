@@ -273,9 +273,9 @@ const Register = () => {
                 />
                 <span className="ml-3 text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
                   I agree to the{' '}
-                  <Link to="/terms-of-service" className="text-blue-400 hover:text-blue-300 font-medium">
+                  <a href="#terms" className="text-blue-400 hover:text-blue-300 font-medium">
                     Terms of Service
-                  </Link>{' '}
+                  </a>{' '}
                   and{' '}
                   <Link to="/privacy-policy" className="text-blue-400 hover:text-blue-300 font-medium">
                     Privacy Policy

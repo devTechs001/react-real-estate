@@ -98,7 +98,7 @@ const Features = () => {
   return (
     <div className="pt-24">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white pt-24 py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <motion.div
             animate={{ backgroundPosition: '200% center' }}
@@ -119,10 +119,18 @@ const Features = () => {
             transition={{ duration: 0.7 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-5xl md:text-6xl font-bold font-display mb-6">
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="inline-block px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-sm font-medium text-white/90 mb-4"
+            >
+              Innovative Solutions
+            </motion.span>
+            <h1 className="text-5xl md:text-7xl font-bold font-display mb-6 leading-tight">
               Powerful Features for Real Estate Success
             </h1>
-            <p className="text-xl text-white/90 mb-8">
+            <p className="text-xl md:text-2xl text-white/90">
               Everything you need to find, buy, sell, or invest in properties with confidence
             </p>
           </motion.div>

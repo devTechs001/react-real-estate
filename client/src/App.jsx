@@ -10,6 +10,9 @@ import ChatBot from './components/ai/Chatbot';
 import Home from './pages/Home';
 import Properties from './pages/Properties';
 import PropertyDetail from './pages/PropertyDetail';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Features from './pages/Features';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
@@ -74,6 +77,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="properties" element={<Properties />} />
           <Route path="properties/:id" element={<PropertyDetail />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="features" element={<Features />} />
           <Route path="invite/:code" element={<InviteLink />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

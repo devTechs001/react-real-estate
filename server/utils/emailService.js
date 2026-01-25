@@ -1,9 +1,9 @@
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import * as handlebars from 'handlebars';
 import fs from 'fs/promises';
 import path from 'path';
 
-const transporter = nodemailer.createTransporter({
+const transporter = createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,

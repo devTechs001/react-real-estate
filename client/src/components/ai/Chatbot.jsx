@@ -81,15 +81,38 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Chat Button */}
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl hover:from-blue-700 hover:to-indigo-700 z-50 transition-all duration-200"
+      {/* Chat Button with Badge */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.3, type: 'spring' }}
       >
-        {isOpen ? <FaTimes size={24} /> : <FaRobot size={24} />}
-      </motion.button>
+        {/* Floating ring animation */}
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-blue-400"
+          animate={{ scale: [1, 1.4], opacity: [1, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative w-16 h-16 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-200 flex items-center justify-center font-bold text-xl border-2 border-blue-400/30"
+        >
+          {isOpen ? <FaTimes size={24} /> : <FaRobot size={24} />}
+          
+          {/* Notification badge */}
+          {!isOpen && (
+            <motion.span
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white"
+            />
+          )}
+        </motion.button>
+      </motion.div>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -98,17 +121,21 @@ const ChatBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden border border-blue-200"
+            transition={{ type: 'spring', duration: 0.3 }}
+            className="fixed bottom-28 right-6 w-96 max-w-[calc(100vw-2rem)] h-[600px] bg-white rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden border border-blue-200 backdrop-blur-lg"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-5 flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-full">
-                <FaRobot size={24} />
+            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-5 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold">RealEstate AI</h3>
+                <p className="text-xs text-blue-100">Always here to help</p>
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">AI Assistant</h3>
-                <p className="text-xs text-white/80">Always here to help</p>
-              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 hover:bg-white/20 rounded-full transition-colors duration-200"
+              >
+                <FaTimes size={18} />
+              </button>
             </div>
 
             {/* Messages */}

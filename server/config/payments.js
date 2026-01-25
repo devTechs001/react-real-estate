@@ -1,9 +1,19 @@
-import Stripe from 'stripe';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Temporarily disable Stripe functionality until package is installed
+let stripe = null;
+
+try {
+  const Stripe = (await import('stripe')).default;
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+} catch (error) {
+  console.warn('Stripe package not found. Payment functionality will be disabled.');
+  console.warn('To enable payments, install stripe: pnpm add stripe');
+}
+
+export { stripe };
 
 export const subscriptionPlans = {
   basic: {
@@ -45,6 +55,9 @@ export const subscriptionPlans = {
 };
 
 export const createPaymentIntent = async (amount, currency = 'usd') => {
+  if (!stripe) {
+    throw new Error('Stripe is not configured. Please install the stripe package.');
+  }
   return await stripe.paymentIntents.create({
     amount: Math.round(amount * 100), // convert to cents
     currency,
@@ -52,6 +65,9 @@ export const createPaymentIntent = async (amount, currency = 'usd') => {
 };
 
 export const createSubscription = async (customerId, priceId) => {
+  if (!stripe) {
+    throw new Error('Stripe is not configured. Please install the stripe package.');
+  }
   return await stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
@@ -61,5 +77,8 @@ export const createSubscription = async (customerId, priceId) => {
 };
 
 export const cancelSubscription = async (subscriptionId) => {
+  if (!stripe) {
+    throw new Error('Stripe is not configured. Please install the stripe package.');
+  }
   return await stripe.subscriptions.cancel(subscriptionId);
 };

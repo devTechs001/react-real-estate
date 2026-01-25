@@ -86,7 +86,7 @@ const ChatBot = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 bg-primary-600 text-white p-4 rounded-full shadow-lg hover:bg-primary-700 z-50"
+        className="fixed bottom-6 right-6 bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl hover:from-blue-700 hover:to-indigo-700 z-50 transition-all duration-200"
       >
         {isOpen ? <FaTimes size={24} /> : <FaRobot size={24} />}
       </motion.button>
@@ -98,10 +98,10 @@ const ChatBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden border border-blue-200"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 flex items-center gap-3">
+            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-5 flex items-center gap-3">
               <div className="bg-white/20 p-2 rounded-full">
                 <FaRobot size={24} />
               </div>
@@ -112,7 +112,7 @@ const ChatBot = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50 to-white">
               {messages.map((message, index) => (
                 <motion.div
                   key={index}
@@ -123,7 +123,7 @@ const ChatBot = () => {
                   }`}
                 >
                   {message.role === 'assistant' && (
-                    <div className="bg-primary-600 text-white p-2 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0">
+                    <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-2 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0">
                       <FaRobot size={16} />
                     </div>
                   )}
@@ -131,8 +131,8 @@ const ChatBot = () => {
                   <div
                     className={`max-w-[70%] p-3 rounded-2xl ${
                       message.role === 'user'
-                        ? 'bg-primary-600 text-white rounded-br-none'
-                        : 'bg-white text-gray-800 rounded-bl-none shadow-sm'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-br-none shadow-md'
+                        : 'bg-white text-gray-800 rounded-bl-none shadow-md border border-blue-100'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -145,27 +145,27 @@ const ChatBot = () => {
                   </div>
 
                   {message.role === 'user' && (
-                    <div className="bg-gray-300 text-gray-700 p-2 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0">
+                    <div className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white p-2 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0">
                       <FaUser size={16} />
                     </div>
                   )}
                 </motion.div>
               ))}
 
-              {loading && (
+                {loading && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="flex gap-2 justify-start"
                 >
-                  <div className="bg-primary-600 text-white p-2 rounded-full h-8 w-8 flex items-center justify-center">
+                  <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-2 rounded-full h-8 w-8 flex items-center justify-center">
                     <FaRobot size={16} />
                   </div>
-                  <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm">
+                  <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-md border border-blue-100">
                     <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-200"></div>
                     </div>
                   </div>
                 </motion.div>
@@ -176,14 +176,14 @@ const ChatBot = () => {
 
             {/* Quick Questions */}
             {messages.length === 1 && (
-              <div className="p-3 border-t bg-white">
-                <p className="text-xs text-gray-600 mb-2">Quick questions:</p>
+              <div className="p-3 border-t border-blue-100 bg-blue-50">
+                <p className="text-xs text-blue-700 font-semibold mb-2">Quick questions:</p>
                 <div className="flex flex-wrap gap-2">
                   {quickQuestions.map((question, index) => (
                     <button
                       key={index}
                       onClick={() => handleQuickQuestion(question)}
-                      className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors"
+                      className="text-xs bg-white hover:bg-blue-100 border border-blue-200 hover:border-blue-400 text-blue-700 px-3 py-1 rounded-full transition-all"
                     >
                       {question}
                     </button>
@@ -193,7 +193,7 @@ const ChatBot = () => {
             )}
 
             {/* Input */}
-            <div className="p-4 border-t bg-white">
+            <div className="p-4 border-t border-blue-100 bg-white">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -201,13 +201,13 @@ const ChatBot = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="flex-1 px-4 py-2 border border-blue-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50"
                   disabled={loading}
                 />
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || loading}
-                  className="bg-primary-600 text-white p-2 rounded-full hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-2 rounded-full hover:from-blue-700 hover:to-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md"
                 >
                   <FaPaperPlane size={20} />
                 </button>

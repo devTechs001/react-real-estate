@@ -37,32 +37,26 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/about"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
+                <a href="/about" className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   About Us
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
+                <a href="/contact" className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   Contact
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
             <ul className="space-y-2">
-              <li className="text-gray-400">Buy Property</li>
-              <li className="text-gray-400">Sell Property</li>
-              <li className="text-gray-400">Rent Property</li>
-              <li className="text-gray-400">Property Management</li>
+              <li className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">Buy Property</li>
+              <li className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">Sell Property</li>
+              <li className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">Rent Property</li>
+              <li className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">Property Management</li>
             </ul>
           </div>
 

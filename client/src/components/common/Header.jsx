@@ -72,7 +72,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-40">
+    <header className="bg-gradient-to-r from-white via-blue-50 to-white shadow-lg fixed top-0 w-full z-40 border-b border-blue-100">
       <nav className="container-custom py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}

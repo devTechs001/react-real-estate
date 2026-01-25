@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import handlebars from 'handlebars';
+import * as handlebars from 'handlebars';
 import fs from 'fs/promises';
 import path from 'path';
 

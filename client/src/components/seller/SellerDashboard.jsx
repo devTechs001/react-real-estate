@@ -8,6 +8,7 @@ import {
   FaChartLine,
   FaDollarSign,
 } from 'react-icons/fa';
+import { dashboardService } from '../../services/dashboardService';
 import { propertyService } from '../../services/PropertyService';
 import { inquiryService } from '../../services/InquiryService';
 import { appointmentService } from '../../services/appointmentService';
@@ -32,27 +33,45 @@ const SellerDashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const [properties, inquiries, appointments] = await Promise.all([
-        propertyService.getUserProperties(),
-        inquiryService.getReceivedInquiries(),
-        appointmentService.getReceivedAppointments(),
-      ]);
+      // Try to get dashboard data from the new endpoint first
+      try {
+        const dashboardData = await dashboardService.getDashboardData();
+        if (dashboardData.role === 'agent') {
+          setStats(dashboardData.stats);
+          // Set recent data if available in the response
+          if (dashboardData.recentProperties) {
+            setRecentInquiries(dashboardData.recentProperties.slice(0, 5)); // Placeholder
+          }
+          if (dashboardData.appointments) {
+            setRecentAppointments(dashboardData.appointments.slice(0, 5)); // Placeholder
+          }
+        }
+      } catch (dashboardError) {
+        console.warn('Using fallback dashboard data:', dashboardError);
 
-      const totalViews = properties.reduce((sum, p) => sum + (p.views || 0), 0);
-      const pendingInquiries = inquiries.filter((i) => i.status === 'pending').length;
-      const pendingAppointments = appointments.filter((a) => a.status === 'pending').length;
+        // Fallback to the original method if the new endpoint fails
+        const [properties, inquiries, appointments] = await Promise.all([
+          propertyService.getUserProperties(),
+          inquiryService.getReceivedInquiries(),
+          appointmentService.getReceivedAppointments(),
+        ]);
 
-      setStats({
-        properties: properties.length,
-        inquiries: inquiries.length,
-        appointments: appointments.length,
-        totalViews,
-        pendingInquiries,
-        pendingAppointments,
-      });
+        const totalViews = properties.reduce((sum, p) => sum + (p.views || 0), 0);
+        const pendingInquiries = inquiries.filter((i) => i.status === 'pending').length;
+        const pendingAppointments = appointments.filter((a) => a.status === 'pending').length;
 
-      setRecentInquiries(inquiries.slice(0, 5));
-      setRecentAppointments(appointments.slice(0, 5));
+        setStats({
+          properties: properties.length,
+          inquiries: inquiries.length,
+          appointments: appointments.length,
+          totalViews,
+          pendingInquiries,
+          pendingAppointments,
+        });
+
+        setRecentInquiries(inquiries.slice(0, 5));
+        setRecentAppointments(appointments.slice(0, 5));
+      }
     } catch (error) {
       console.error('Dashboard error:', error);
     } finally {

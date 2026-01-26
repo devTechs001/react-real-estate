@@ -1,19 +1,54 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaHome, FaBars, FaTimes, FaUser, FaPlus, FaChartLine, FaCog, FaHeart, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaBars, FaTimes, FaUser, FaPlus, FaChartLine, FaCog, FaHeart, FaEnvelope, FaBell, FaSearch, FaCalendar } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { usePermissions } from '@/hooks/usePermissions';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const { user, logout, isAuthenticated } = useAuth();
   const { canAccess } = usePermissions();
   const navigate = useNavigate();
 
+  // Initialize notifications
+  useMemo(() => {
+    if (isAuthenticated && user) {
+      // Simulate fetching notifications
+      const mockNotifications = [
+        { id: 1, type: 'inquiry', message: 'New inquiry for your property', time: '2 hours ago', read: false },
+        { id: 2, type: 'appointment', message: 'Appointment scheduled for tomorrow', time: '1 day ago', read: true },
+        { id: 3, type: 'message', message: 'New message from agent', time: '3 days ago', read: false },
+      ];
+      setNotifications(mockNotifications);
+      setUnreadCount(mockNotifications.filter(n => !n.read).length);
+    }
+  }, [isAuthenticated, user]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/properties?q=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const markNotificationAsRead = (id) => {
+    setNotifications(notifications.map(n =>
+      n.id === id ? {...n, read: true} : n
+    ));
+    setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
   // Get role-specific dashboard path
@@ -39,7 +74,8 @@ const Header = () => {
     if (user.role === 'user') {
       links.push(
         { to: '/client/favorites', label: 'Favorites', icon: <FaHeart /> },
-        { to: '/client/messages', label: 'Messages', icon: <FaEnvelope /> }
+        { to: '/client/messages', label: 'Messages', icon: <FaEnvelope /> },
+        { to: '/client/appointments', label: 'Appointments', icon: <FaCalendar /> }
       );
     }
 
@@ -96,6 +132,15 @@ const Header = () => {
               </Link>
             ))}
 
+            {/* Search Button */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="p-2 rounded-full text-gray-700 hover:bg-gray-100"
+              aria-label="Search"
+            >
+              <FaSearch />
+            </button>
+
             {/* Role-based quick links */}
             {getRoleBasedLinks.slice(0, 2).map((link) => (
               <Link
@@ -118,6 +163,22 @@ const Header = () => {
                     <FaPlus /> Add Property
                   </Link>
                 )}
+
+                {/* Notifications */}
+                <div className="relative">
+                  <button
+                    className="p-2 rounded-full text-gray-700 hover:bg-gray-100 relative"
+                    aria-label="Notifications"
+                  >
+                    <FaBell />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                </div>
+
                 <div className="relative group">
                   <button className="flex items-center gap-2 text-gray-700 hover:text-primary-600">
                     <div className="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center font-semibold">
@@ -203,20 +264,70 @@ const Header = () => {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-2xl text-gray-700"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
           >
             {isOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Desktop Search Bar - Collapsible */}
         <AnimatePresence>
-          {isOpen && (
+          {isSearchOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden mt-4 overflow-hidden"
+              className="py-4"
             >
+              <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search properties, locations, or agents..."
+                    className="w-full px-4 py-3 pl-12 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                    autoFocus
+                  />
+                  <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
+      {/* Mobile Navigation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="md:hidden mt-4 overflow-hidden bg-white border-t border-gray-100"
+          >
+            <div className="container-custom py-4">
+              {/* Mobile Search */}
+              <form onSubmit={handleSearch} className="mb-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search properties..."
+                    className="w-full px-4 py-3 pl-10 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                  />
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                </div>
+              </form>
+
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
                   <Link
@@ -325,10 +436,10 @@ const Header = () => {
                   </>
                 )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

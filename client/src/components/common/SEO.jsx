@@ -1,35 +1,39 @@
+// client/src/components/common/SEO.jsx
 import { Helmet } from 'react-helmet-async';
 
-const SEO = ({ 
-  title, 
-  description, 
-  keywords, 
-  image, 
-  url,
-  type = 'website' 
-}) => {
-  const defaultTitle = 'Real Estate Platform - Find Your Dream Property';
-  const defaultDescription = 'Discover the best properties with our AI-powered real estate platform';
-  const defaultImage = '/logo.png';
+const SEO = ({ title, description, keywords, image, url }) => {
+  const siteTitle = 'HomeScape';
+  const defaultDescription = 'Find your dream home with AI-powered recommendations. Browse thousands of properties for sale and rent.';
+  const defaultImage = '/og-image.jpg';
+  const siteUrl = 'https://homescape.com';
+
+  const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+  const fullDescription = description || defaultDescription;
+  const fullImage = image || defaultImage;
+  const fullUrl = url || siteUrl;
 
   return (
     <Helmet>
-      <title>{title ? `${title} | Real Estate` : defaultTitle}</title>
-      <meta name="description" content={description || defaultDescription} />
+      <title>{fullTitle}</title>
+      <meta name="description" content={fullDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
 
       {/* Open Graph */}
-      <meta property="og:title" content={title || defaultTitle} />
-      <meta property="og:description" content={description || defaultDescription} />
-      <meta property="og:image" content={image || defaultImage} />
-      <meta property="og:url" content={url || window.location.href} />
-      <meta property="og:type" content={type} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={fullDescription} />
+      <meta property="og:image" content={fullImage} />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:type" content="website" />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title || defaultTitle} />
-      <meta name="twitter:description" content={description || defaultDescription} />
-      <meta name="twitter:image" content={image || defaultImage} />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={fullDescription} />
+      <meta name="twitter:image" content={fullImage} />
+
+      {/* Additional */}
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href={fullUrl} />
     </Helmet>
   );
 };

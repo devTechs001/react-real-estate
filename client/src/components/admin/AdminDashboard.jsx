@@ -9,7 +9,7 @@ import {
   FaArrowDown,
 } from 'react-icons/fa';
 import Loader from '../common/Loader';
-import api from '../../services/api';
+import { dashboardService } from '../../services/dashboardService';
 import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
@@ -23,9 +23,10 @@ const AdminDashboard = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const { data } = await api.get(`/admin/dashboard-stats?days=${timeRange}`);
-      setStats(data);
+      const dashboardData = await dashboardService.getDashboardData();
+      setStats(dashboardData.stats);
     } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
       toast.error('Failed to load dashboard');
     } finally {
       setLoading(false);
@@ -39,7 +40,7 @@ const AdminDashboard = () => {
       icon: FaUsers,
       label: 'Total Users',
       value: stats.totalUsers,
-      change: stats.userGrowth.length > 0 ? '+12%' : '0%',
+      change: stats.userGrowth?.length > 0 ? '+12%' : '0%',
       trend: 'up',
       color: 'primary',
     },
@@ -54,7 +55,7 @@ const AdminDashboard = () => {
     {
       icon: FaDollarSign,
       label: 'Revenue',
-      value: `$${stats.totalRevenue.toLocaleString()}`,
+      value: stats.totalRevenue ? `$${stats.totalRevenue.toLocaleString()}` : '$0',
       change: '+25%',
       trend: 'up',
       color: 'blue',
@@ -62,7 +63,7 @@ const AdminDashboard = () => {
     {
       icon: FaExclamationTriangle,
       label: 'Pending Reviews',
-      value: stats.pendingReviews,
+      value: stats.pendingReviews || 0,
       change: '-5%',
       trend: 'down',
       color: 'red',
@@ -70,11 +71,11 @@ const AdminDashboard = () => {
   ];
 
   const userGrowthData = {
-    labels: stats.userGrowth.map((d) => d.month),
+    labels: stats.userGrowth?.map((d) => d.month) || [],
     datasets: [
       {
         label: 'New Users',
-        data: stats.userGrowth.map((d) => d.count),
+        data: stats.userGrowth?.map((d) => d.count) || [],
         borderColor: 'rgb(14, 165, 233)',
         backgroundColor: 'rgba(14, 165, 233, 0.1)',
         tension: 0.4,
@@ -84,11 +85,11 @@ const AdminDashboard = () => {
   };
 
   const propertyByTypeData = {
-    labels: stats.propertyByType.map((d) => d.type),
+    labels: stats.propertyByType?.map((d) => d.type) || [],
     datasets: [
       {
         label: 'Properties',
-        data: stats.propertyByType.map((d) => d.count),
+        data: stats.propertyByType?.map((d) => d.count) || [],
         backgroundColor: [
           'rgba(14, 165, 233, 0.8)',
           'rgba(16, 185, 129, 0.8)',
@@ -188,7 +189,7 @@ const AdminDashboard = () => {
             </a>
           </div>
           <div className="space-y-3">
-            {stats.recentUsers.map((user) => (
+            {(stats.recentUsers || []).map((user) => (
               <div
                 key={user._id}
                 className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
@@ -203,7 +204,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-600">{user.email}</p>
                 </div>
                 <span className="text-xs text-gray-500">
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}
                 </span>
               </div>
             ))}
@@ -222,13 +223,13 @@ const AdminDashboard = () => {
             </a>
           </div>
           <div className="space-y-3">
-            {stats.recentProperties.map((property) => (
+            {(stats.recentProperties || []).map((property) => (
               <div
                 key={property._id}
                 className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
               >
                 <img
-                  src={property.images[0]}
+                  src={property.images?.[0] || '/default-property.jpg'}
                   alt={property.title}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
@@ -237,7 +238,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-600">{property.location}</p>
                 </div>
                 <span className="text-sm font-semibold text-primary-600">
-                  ${property.price.toLocaleString()}
+                  {property.price ? `$${property.price.toLocaleString()}` : ''}
                 </span>
               </div>
             ))}
@@ -276,6 +277,62 @@ const AdminDashboard = () => {
           >
             <FaExclamationTriangle className="text-3xl mx-auto mb-2" />
             <p className="font-medium">Reports</p>
+          </a>
+        </div>
+      </div>
+
+      {/* Advanced Analytics */}
+      <div className="mt-8 bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl p-6 text-white">
+        <h3 className="text-xl font-semibold mb-4">Advanced Analytics</h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          <a
+            href="/admin/financial-analytics"
+            className="bg-white/20 hover:bg-white/30 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaDollarSign className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">Financial Analytics</p>
+          </a>
+          <a
+            href="/admin/seller-performance"
+            className="bg-white/20 hover:bg-white/30 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaChartLine className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">Seller Performance</p>
+          </a>
+          <a
+            href="/admin/system"
+            className="bg-white/20 hover:bg-white/30 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaChartLine className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">System Health</p>
+          </a>
+          <a
+            href="/admin/logs"
+            className="bg-white/20 hover:bg-white/30 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaExclamationTriangle className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">System Logs</p>
+          </a>
+        </div>
+      </div>
+
+      {/* Developer/Admin Tools */}
+      <div className="mt-8 bg-gray-800 rounded-xl p-6 text-white">
+        <h3 className="text-xl font-semibold mb-4">Developer Tools</h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          <a
+            href="/admin/emails"
+            className="bg-gray-700 hover:bg-gray-600 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaChartLine className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">Email Templates</p>
+          </a>
+          <a
+            href="/admin/settings"
+            className="bg-gray-700 hover:bg-gray-600 p-4 rounded-lg text-center transition-colors"
+          >
+            <FaChartLine className="text-3xl mx-auto mb-2" />
+            <p className="font-medium">System Settings</p>
           </a>
         </div>
       </div>

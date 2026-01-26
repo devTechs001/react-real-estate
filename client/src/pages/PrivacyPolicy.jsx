@@ -1,109 +1,202 @@
+// client/src/pages/PrivacyPolicy.jsx
+import { motion } from 'framer-motion';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
 
 const PrivacyPolicy = () => {
+  const lastUpdated = 'January 15, 2024';
+
+  const sections = [
+    {
+      title: 'Information We Collect',
+      content: `We collect information you provide directly:
+
+**Personal Information:**
+• Name, email address, phone number
+• Profile photo and biographical information
+• Payment and billing information
+• Property preferences and search history
+
+**Automatically Collected:**
+• Device information and IP address
+• Browser type and operating system
+• Usage patterns and interactions
+• Location data (with your permission)
+• Cookies and similar technologies`
+    },
+    {
+      title: 'How We Use Your Information',
+      content: `We use your information to:
+
+• Provide and improve our services
+• Process transactions and send notifications
+• Personalize your experience with AI recommendations
+• Communicate about properties and updates
+• Analyze usage patterns and trends
+• Prevent fraud and ensure security
+• Comply with legal obligations`
+    },
+    {
+      title: 'Information Sharing',
+      content: `We may share your information with:
+
+**Service Providers:** Third parties who help us operate our platform
+**Property Owners/Agents:** When you express interest in a property
+**Legal Requirements:** When required by law or to protect rights
+**Business Transfers:** In connection with mergers or acquisitions
+
+We do NOT sell your personal information to third parties.`
+    },
+    {
+      title: 'Data Security',
+      content: `We implement robust security measures:
+
+• Encryption of data in transit and at rest
+• Regular security audits and penetration testing
+• Access controls and authentication
+• Secure data centers
+• Employee training on data protection
+
+No system is 100% secure, but we strive to protect your information.`
+    },
+    {
+      title: 'Your Rights',
+      content: `Depending on your location, you may have the right to:
+
+• Access your personal information
+• Correct inaccurate data
+• Delete your account and data
+• Export your data
+• Opt-out of marketing communications
+• Restrict processing of your data
+• Object to automated decision-making
+
+Contact us to exercise these rights.`
+    },
+    {
+      title: 'Cookies and Tracking',
+      content: `We use cookies and similar technologies for:
+
+• Authentication and security
+• Remembering preferences
+• Analytics and performance
+• Personalized advertising
+
+You can manage cookies through your browser settings. Note that disabling cookies may affect functionality.`
+    },
+    {
+      title: 'Third-Party Links',
+      content: `Our platform may contain links to third-party websites. We are not responsible for their privacy practices. We encourage you to review the privacy policies of any third-party sites you visit.`
+    },
+    {
+      title: 'Children\'s Privacy',
+      content: `Our services are not directed to children under 18. We do not knowingly collect information from children. If we learn we have collected such information, we will delete it promptly.`
+    },
+    {
+      title: 'International Transfers',
+      content: `Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for international transfers, including standard contractual clauses.`
+    },
+    {
+      title: 'Data Retention',
+      content: `We retain your information for as long as:
+
+• Your account is active
+• Needed to provide services
+• Required by legal obligations
+• Necessary for legitimate business purposes
+
+You can request deletion of your account at any time.`
+    },
+    {
+      title: 'Changes to This Policy',
+      content: `We may update this policy periodically. We will notify you of significant changes through:
+
+• Email notification
+• In-app notifications
+• Website announcements
+
+Your continued use after changes indicates acceptance of the updated policy.`
+    },
+    {
+      title: 'Contact Us',
+      content: `For privacy-related inquiries:
+
+**Email:** privacy@homescape.com
+**Address:** Privacy Team, 123 Property Lane, Miami, FL 33101
+**Phone:** +1 (555) 123-4567
+
+For EU residents, you may also contact your local data protection authority.`
+    }
+  ];
+
   return (
     <>
-      <SEO title="Privacy Policy" description="Our privacy policy and data protection practices" />
-      
-      <div className="container-custom py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
-          
-          <div className="prose prose-lg max-w-none">
-            <p className="text-gray-600 mb-8">Last updated: January 1, 2024</p>
+      <SEO title="Privacy Policy - HomeScape" description="Learn how we protect your privacy" />
 
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">1. Information We Collect</h2>
-              <p className="text-gray-700 mb-4">
-                We collect information that you provide directly to us, including:
-              </p>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li>Name, email address, and contact information</li>
-                <li>Property listings and related information</li>
-                <li>Messages and communications</li>
-                <li>Payment and billing information</li>
-                <li>Profile information and preferences</li>
-              </ul>
-            </section>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
 
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">2. How We Use Your Information</h2>
-              <p className="text-gray-700 mb-4">We use the information we collect to:</p>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li>Provide, maintain, and improve our services</li>
-                <li>Process transactions and send related information</li>
-                <li>Send you technical notices and support messages</li>
-                <li>Respond to your comments and questions</li>
-                <li>Send you marketing communications (with your consent)</li>
-                <li>Monitor and analyze trends and usage</li>
-                <li>Detect and prevent fraud and abuse</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">3. Information Sharing</h2>
-              <p className="text-gray-700 mb-4">
-                We may share your information in the following circumstances:
-              </p>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li>With your consent or at your direction</li>
-                <li>With service providers who perform services on our behalf</li>
-                <li>To comply with legal obligations</li>
-                <li>To protect our rights and prevent fraud</li>
-                <li>In connection with a merger or acquisition</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">4. Data Security</h2>
-              <p className="text-gray-700">
-                We implement appropriate technical and organizational measures to protect your
-                personal information against unauthorized access, alteration, disclosure, or
-                destruction. However, no method of transmission over the Internet is 100% secure.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">5. Your Rights</h2>
-              <p className="text-gray-700 mb-4">You have the right to:</p>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li>Access and receive a copy of your personal data</li>
-                <li>Correct inaccurate personal data</li>
-                <li>Request deletion of your personal data</li>
-                <li>Object to processing of your personal data</li>
-                <li>Request restriction of processing</li>
-                <li>Data portability</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">6. Cookies</h2>
-              <p className="text-gray-700">
-                We use cookies and similar tracking technologies to collect and track information
-                about your use of our services. You can control cookies through your browser settings.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">7. Children's Privacy</h2>
-              <p className="text-gray-700">
-                Our services are not directed to children under 13. We do not knowingly collect
-                personal information from children under 13.
-              </p>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">8. Contact Us</h2>
-              <p className="text-gray-700">
-                If you have any questions about this Privacy Policy, please contact us at:
-                <br />
-                Email: privacy@realestate.com
-                <br />
-                Address: 123 Real Estate St, New York, NY 10001
-              </p>
-            </section>
+        {/* Hero */}
+        <section className="bg-gradient-to-br from-slate-900 to-purple-900 py-16">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center text-white"
+            >
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+              <p className="text-purple-200">Last updated: {lastUpdated}</p>
+            </motion.div>
           </div>
-        </div>
+        </section>
+
+        {/* Content */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              {/* Summary */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-8">
+                <h2 className="font-semibold text-gray-900 mb-3">Privacy at a Glance</h2>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-500">✓</span>
+                    <span>We never sell your data</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-500">✓</span>
+                    <span>Your data is encrypted</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-500">✓</span>
+                    <span>You control your information</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sections */}
+              <div className="space-y-6">
+                {sections.map((section, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-white rounded-2xl p-6 shadow-sm"
+                  >
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">{section.title}</h2>
+                    <div className="text-gray-600 whitespace-pre-line prose prose-sm max-w-none">
+                      {section.content.split('**').map((part, i) => 
+                        i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </>
   );

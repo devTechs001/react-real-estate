@@ -28,6 +28,7 @@ import savedSearchRoutes from './routes/savedSearches.js';
 import paymentRoutes from './routes/payments.js';
 import uploadRoutes from './routes/upload.js';
 import referralRoutes from './routes/referrals.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 dotenv.config();
 
@@ -95,6 +96,7 @@ app.use('/api/saved-searches', savedSearchRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/referrals', referralRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Error Handler
 app.use(errorHandler);

@@ -1,28 +1,34 @@
+// client/src/services/favoriteService.js
 import api from './api';
 
 export const favoriteService = {
-  getFavorites: async () => {
-    const response = await api.get('/favorites');
+  // Get all favorites
+  getAll: async (params = {}) => {
+    const response = await api.get('/favorites', { params });
     return response.data;
   },
 
-  addFavorite: async (propertyId, notes, tags) => {
-    const response = await api.post('/favorites', { propertyId, notes, tags });
+  // Add to favorites
+  add: async (propertyId) => {
+    const response = await api.post('/favorites', { propertyId });
     return response.data;
   },
 
-  removeFavorite: async (propertyId) => {
+  // Remove from favorites
+  remove: async (propertyId) => {
     const response = await api.delete(`/favorites/${propertyId}`);
     return response.data;
   },
 
-  updateFavorite: async (id, notes, tags) => {
-    const response = await api.put(`/favorites/${id}`, { notes, tags });
-    return response.data;
-  },
-
-  checkFavorite: async (propertyId) => {
+  // Check if property is favorited
+  check: async (propertyId) => {
     const response = await api.get(`/favorites/check/${propertyId}`);
     return response.data;
   },
+
+  // Get favorites count
+  getCount: async () => {
+    const response = await api.get('/favorites/count');
+    return response.data;
+  }
 };

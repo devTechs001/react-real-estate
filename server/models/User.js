@@ -32,6 +32,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    bio: {
+      type: String,
+      default: '',
+      maxlength: [500, 'Bio must be less than 500 characters'],
+    },
+    location: {
+      type: String,
+      default: '',
+    },
     role: {
       type: String,
       enum: ['user', 'agent', 'admin'],
@@ -41,6 +50,45 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    verificationToken: {
+      type: String,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpire: {
+      type: Date,
+    },
+    preferences: {
+      emailNotifications: {
+        type: Boolean,
+        default: true,
+      },
+      smsNotifications: {
+        type: Boolean,
+        default: false,
+      },
+      newsletter: {
+        type: Boolean,
+        default: true,
+      },
+      theme: {
+        type: String,
+        default: 'light',
+      },
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    followers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    following: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
   },
   {
     timestamps: true,

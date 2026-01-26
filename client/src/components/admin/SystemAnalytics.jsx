@@ -1,160 +1,226 @@
 import { useState, useEffect } from 'react';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
-  FaServer,
-  FaDatabase,
-  FaMemory,
-  FaClock,
-  FaCheckCircle,
-  FaTimesCircle,
-} from 'react-icons/fa';
-import { Line } from 'react-chartjs-2';
-import api from '../../services/api';
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { dashboardService } from '../../services/dashboardService';
 import Loader from '../common/Loader';
+import toast from 'react-hot-toast';
 
-const SystemAnalytics = () => {
-  const [metrics, setMetrics] = useState(null);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const AdminAnalytics = () => {
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState('30');
 
   useEffect(() => {
-    fetchSystemMetrics();
-    const interval = setInterval(fetchSystemMetrics, 30000); // Refresh every 30s
-    return () => clearInterval(interval);
-  }, []);
+    fetchAnalyticsData();
+  }, [timeRange]);
 
-  const fetchSystemMetrics = async () => {
+  const fetchAnalyticsData = async () => {
     try {
-      const { data } = await api.get('/admin/system-metrics');
-      setMetrics(data);
+      // Fetch dashboard stats which now includes financial metrics
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/dashboard`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAnalyticsData(data);
+      } else {
+        throw new Error('Failed to fetch analytics data');
+      }
     } catch (error) {
-      console.error('Failed to fetch metrics:', error);
+      console.error('Error fetching analytics data:', error);
+      toast.error('Failed to load analytics data');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <Loader fullScreen />;
-
-  const systemCards = [
-    {
-      icon: FaServer,
-      label: 'Server Status',
-      value: metrics.serverStatus,
-      status: metrics.serverStatus === 'healthy' ? 'success' : 'error',
-    },
-    {
-      icon: FaDatabase,
-      label: 'Database',
-      value: `${metrics.dbSize} MB`,
-      status: 'success',
-    },
-    {
-      icon: FaMemory,
-      label: 'Memory Usage',
-      value: `${metrics.memoryUsage}%`,
-      status: metrics.memoryUsage > 80 ? 'warning' : 'success',
-    },
-    {
-      icon: FaClock,
-      label: 'Uptime',
-      value: metrics.uptime,
-      status: 'success',
-    },
-  ];
-
-  const performanceData = {
-    labels: metrics.performanceHistory.map((d) => d.time),
+  // Prepare chart data
+  const revenueTrendData = {
+    labels: analyticsData?.userGrowth?.map(item => item.month) || [],
     datasets: [
       {
-        label: 'Response Time (ms)',
-        data: metrics.performanceHistory.map((d) => d.responseTime),
-        borderColor: 'rgb(14, 165, 233)',
-        backgroundColor: 'rgba(14, 165, 233, 0.1)',
-        tension: 0.4,
-        fill: true,
-      },
-    ],
+        label: 'New Users',
+        data: analyticsData?.userGrowth?.map(item => item.count) || [],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        yAxisID: 'y',
+      }
+    ]
   };
 
-  return (
-    <div className="container-custom py-8">
-      <h1 className="text-3xl font-bold mb-8">System Analytics</h1>
+  const propertyTypeData = {
+    labels: analyticsData?.propertyByType?.map(item => item.type) || [],
+    datasets: [
+      {
+        label: 'Properties',
+        data: analyticsData?.propertyByType?.map(item => item.count) || [],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 205, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(153, 102, 255)',
+        ],
+        borderWidth: 1,
+      }
+    ]
+  };
 
-      {/* System Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {systemCards.map((card, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <card.icon className="text-3xl text-primary-600" />
-              {card.status === 'success' ? (
-                <FaCheckCircle className="text-green-600 text-xl" />
-              ) : card.status === 'error' ? (
-                <FaTimesCircle className="text-red-600 text-xl" />
-              ) : (
-                <FaTimesCircle className="text-yellow-600 text-xl" />
-              )}
-            </div>
-            <p className="text-gray-600 text-sm mb-1">{card.label}</p>
-            <p className="text-2xl font-bold">{card.value}</p>
-          </div>
-        ))}
+  const revenueTrendOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'User Growth Trend',
+      },
+    },
+    scales: {
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+      }
+    }
+  };
+
+  const propertyTypeOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Properties by Type',
+      },
+    },
+  };
+
+  if (loading) return <Loader />;
+
+  return (
+    <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">Platform Analytics</h2>
+        <select
+          value={timeRange}
+          onChange={(e) => setTimeRange(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2"
+        >
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+        </select>
       </div>
 
-      {/* Performance Chart */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-        <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-        <div className="h-64">
-          <Line
-            data={performanceData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-              },
-            }}
-          />
+      {/* Financial Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4">
+          <h3 className="text-sm font-medium">Total Revenue</h3>
+          <p className="text-2xl font-bold">
+            ${analyticsData?.financialMetrics?.totalRevenue?.toLocaleString() || '0'}
+          </p>
+          <p className="text-xs opacity-80">Est. commissions included</p>
+        </div>
+        
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4">
+          <h3 className="text-sm font-medium">Profit</h3>
+          <p className="text-2xl font-bold">
+            ${analyticsData?.financialMetrics?.profit?.toLocaleString() || '0'}
+          </p>
+          <p className="text-xs opacity-80">After expenses</p>
+        </div>
+        
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-4">
+          <h3 className="text-sm font-medium">Total Properties</h3>
+          <p className="text-2xl font-bold">{analyticsData?.totalProperties || 0}</p>
+          <p className="text-xs opacity-80">Across all sellers</p>
+        </div>
+        
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg p-4">
+          <h3 className="text-sm font-medium">Total Users</h3>
+          <p className="text-2xl font-bold">{analyticsData?.totalUsers || 0}</p>
+          <p className="text-xs opacity-80">Registered on platform</p>
         </div>
       </div>
 
-      {/* API Endpoints */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-        <h3 className="text-lg font-semibold mb-4">API Endpoints Performance</h3>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <Line data={revenueTrendData} options={revenueTrendOptions} />
+        </div>
+        
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <Pie data={propertyTypeData} options={propertyTypeOptions} />
+        </div>
+      </div>
+
+      {/* Top Performing Agents */}
+      <div className="mb-8">
+        <h3 className="text-lg font-medium mb-4">Top Performing Agents</h3>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="text-left py-3 px-4">Endpoint</th>
-                <th className="text-right py-3 px-4">Requests</th>
-                <th className="text-right py-3 px-4">Avg Response</th>
-                <th className="text-right py-3 px-4">Error Rate</th>
-                <th className="text-right py-3 px-4">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agent</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Properties Sold</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenue Generated</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg. Rating</th>
               </tr>
             </thead>
-            <tbody>
-              {metrics.apiEndpoints.map((endpoint, index) => (
-                <tr key={index} className="border-b">
-                  <td className="py-3 px-4 font-mono text-sm">{endpoint.path}</td>
-                  <td className="text-right py-3 px-4">{endpoint.requests}</td>
-                  <td className="text-right py-3 px-4">{endpoint.avgResponse}ms</td>
-                  <td className="text-right py-3 px-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        endpoint.errorRate > 5
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-green-100 text-green-700'
-                      }`}
-                    >
-                      {endpoint.errorRate}%
-                    </span>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {analyticsData?.topAgents?.slice(0, 5).map((agent, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{agent.agentName}</div>
+                    <div className="text-sm text-gray-500">{agent.agentEmail}</div>
                   </td>
-                  <td className="text-right py-3 px-4">
-                    {endpoint.status === 'healthy' ? (
-                      <FaCheckCircle className="inline text-green-600" />
-                    ) : (
-                      <FaTimesCircle className="inline text-red-600" />
-                    )}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {agent.propertiesSold}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    ${agent.totalRevenue?.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {agent.avgRating ? agent.avgRating.toFixed(1) : 'N/A'} ★
                   </td>
                 </tr>
               ))}
@@ -163,28 +229,48 @@ const SystemAnalytics = () => {
         </div>
       </div>
 
-      {/* Error Logs */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-lg font-semibold mb-4">Recent Errors</h3>
-        <div className="space-y-3 max-h-96 overflow-y-auto">
-          {metrics.recentErrors.map((error, index) => (
-            <div
-              key={index}
-              className="p-4 bg-red-50 border-l-4 border-red-500 rounded"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <p className="font-medium text-red-900">{error.message}</p>
-                <span className="text-xs text-red-600">
-                  {new Date(error.timestamp).toLocaleString()}
-                </span>
-              </div>
-              <p className="text-sm text-red-700 font-mono">{error.stack}</p>
+      {/* Property Status Distribution */}
+      <div className="mb-8">
+        <h3 className="text-lg font-medium mb-4">Properties by Status</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {analyticsData?.propertyByStatus?.map((status, index) => (
+            <div key={index} className="border rounded-lg p-4 text-center">
+              <p className="text-2xl font-bold text-blue-600">{status.count}</p>
+              <p className="text-sm text-gray-600 capitalize">{status.status}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="font-medium text-gray-700 mb-3">Quick Analytics Access</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <a 
+            href="/admin/financial-analytics" 
+            className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:bg-gray-100 transition-colors"
+          >
+            <div className="text-indigo-600 font-medium">Financial Analytics</div>
+            <div className="text-sm text-gray-600">Detailed revenue and expense reports</div>
+          </a>
+          <a 
+            href="/admin/seller-performance" 
+            className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:bg-gray-100 transition-colors"
+          >
+            <div className="text-indigo-600 font-medium">Seller Performance</div>
+            <div className="text-sm text-gray-600">Individual seller metrics and rankings</div>
+          </a>
+          <a 
+            href="/admin/reports" 
+            className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:bg-gray-100 transition-colors"
+          >
+            <div className="text-indigo-600 font-medium">Detailed Reports</div>
+            <div className="text-sm text-gray-600">Customizable reports and exports</div>
+          </a>
         </div>
       </div>
     </div>
   );
 };
 
-export default SystemAnalytics;
+export default AdminAnalytics;

@@ -1,279 +1,284 @@
 import OpenAI from 'openai';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { Redis } from 'ioredis';
+import crypto from 'crypto';
 
 class OpenAIService {
-  // Chat completion
-  async chat(messages, context = {}) {
-    try {
-      const systemPrompt = `You are an expert real estate assistant. You help users find properties, 
-      answer questions about real estate, provide market insights, and assist with property decisions. 
-      Be professional, helpful, and accurate. ${context.additionalContext || ''}`;
+  constructor() {
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+    this.redis = new Redis({
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT || 6379,
+    });
+    this.cacheExpiry = 3600; // 1 hour
+  }
 
-      const completion = await openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
+  // Generate cache key
+  generateCacheKey(prefix, data) {
+    const hash = crypto.createHash('md5').update(JSON.stringify(data)).digest('hex');
+    return `ai:${prefix}:${hash}`;
+  }
+
+  // Get cached response
+  async getCached(key) {
+    try {
+      const cached = await this.redis.get(key);
+      return cached ? JSON.parse(cached) : null;
+    } catch (error) {
+      console.error('Cache retrieval error:', error);
+      return null;
+    }
+  }
+
+  // Set cached response
+  async setCached(key, data, expiry = this.cacheExpiry) {
+    try {
+      await this.redis.setex(key, expiry, JSON.stringify(data));
+    } catch (error) {
+      console.error('Cache setting error:', error);
+    }
+  }
+
+  // Generate property description
+  async generatePropertyDescription(propertyData) {
+    const cacheKey = this.generateCacheKey('description', propertyData);
+    const cached = await this.getCached(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const prompt = `Write an engaging and professional property description for:
+        Type: ${propertyData.propertyType}
+        Location: ${propertyData.location}
+        Bedrooms: ${propertyData.bedrooms}
+        Bathrooms: ${propertyData.bathrooms}
+        Area: ${propertyData.area} sqft
+        Features: ${propertyData.amenities?.join(', ') || 'N/A'}
+        
+        Make it appealing to potential buyers/renters, highlighting key features and benefits.
+        Keep it under 200 words.`;
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4',
         messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages,
+          { role: 'system', content: 'You are a professional real estate copywriter.' },
+          { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 1000,
+        max_tokens: 300,
       });
 
-      return {
-        message: completion.choices[0].message.content,
-        usage: completion.usage,
-      };
+      const description = response.choices[0].message.content;
+      await this.setCached(cacheKey, description);
+      return description;
     } catch (error) {
-      console.error('OpenAI Chat Error:', error);
-      throw new Error('AI chat service unavailable');
+      console.error('OpenAI description generation error:', error);
+      throw new Error('Failed to generate property description');
     }
   }
 
-  // Property description generation
-  async generatePropertyDescription(propertyData) {
+  // Answer property questions
+  async answerPropertyQuestion(property, question) {
     try {
-      const prompt = `Generate an engaging, professional property description for:
-      - Type: ${propertyData.propertyType}
-      - Location: ${propertyData.location}
-      - Bedrooms: ${propertyData.bedrooms}
-      - Bathrooms: ${propertyData.bathrooms}
-      - Area: ${propertyData.area} sqft
-      - Amenities: ${propertyData.amenities.join(', ')}
-      - Price: $${propertyData.price}
-      
-      Make it attractive to potential buyers/renters. Focus on unique features and benefits.`;
+      const prompt = `Based on this property information:
+        ${JSON.stringify(property, null, 2)}
+        
+        Answer the following question concisely and accurately:
+        ${question}
+        
+        If the information is not available, politely say so and suggest contacting the seller.`;
 
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.8,
-        max_tokens: 500,
-      });
-
-      return completion.choices[0].message.content;
-    } catch (error) {
-      console.error('Description Generation Error:', error);
-      throw error;
-    }
-  }
-
-  // Image analysis
-  async analyzePropertyImage(imageUrl) {
-    try {
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4-vision-preview',
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
         messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: `Analyze this property image and provide:
-                1. Room type identification
-                2. Condition assessment
-                3. Notable features
-                4. Estimated quality (1-10)
-                5. Potential issues or concerns
-                6. Suggestions for improvement`,
-              },
-              {
-                type: 'image_url',
-                image_url: { url: imageUrl },
-              },
-            ],
-          },
+          { role: 'system', content: 'You are a helpful real estate assistant.' },
+          { role: 'user', content: prompt }
         ],
-        max_tokens: 500,
+        temperature: 0.5,
+        max_tokens: 150,
       });
 
-      return this.parseImageAnalysis(completion.choices[0].message.content);
+      return response.choices[0].message.content;
     } catch (error) {
-      console.error('Image Analysis Error:', error);
-      throw error;
+      console.error('OpenAI Q&A error:', error);
+      throw new Error('Failed to answer question');
     }
   }
 
-  parseImageAnalysis(content) {
-    // Parse the AI response into structured data
-    return {
-      analysis: content,
-      timestamp: new Date(),
-    };
+  // Generate market insights
+  async generateMarketInsights(location, propertyType) {
+    const cacheKey = this.generateCacheKey('insights', { location, propertyType });
+    const cached = await this.getCached(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const prompt = `Provide detailed real estate market insights for:
+        Location: ${location}
+        Property Type: ${propertyType}
+        
+        Include:
+        1. Current market trends
+        2. Price trends
+        3. Investment potential
+        4. Best time to buy/sell
+        5. Future outlook
+        
+        Format the response in a structured way with clear sections.`;
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          { role: 'system', content: 'You are a real estate market analyst expert.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.6,
+        max_tokens: 500,
+      });
+
+      const insights = response.choices[0].message.content;
+      await this.setCached(cacheKey, insights, 7200); // Cache for 2 hours
+      return insights;
+    } catch (error) {
+      console.error('OpenAI insights generation error:', error);
+      throw new Error('Failed to generate market insights');
+    }
   }
 
-  // Market insights
-  async generateMarketInsights(marketData) {
+  // Generate property comparison
+  async compareProperties(properties) {
     try {
-      const prompt = `Based on this real estate market data:
-      - Average Price: $${marketData.avgPrice}
-      - Total Listings: ${marketData.totalListings}
-      - Price Trend: ${marketData.trend}%
-      - Location: ${marketData.location}
-      - Time Period: ${marketData.period}
-      
-      Provide:
-      1. Market trend analysis
-      2. Investment opportunities
-      3. Price predictions for next 3 months
-      4. Buyer/Seller market indicator
-      5. Key recommendations`;
+      const prompt = `Compare these properties and provide a detailed analysis:
+        ${JSON.stringify(properties, null, 2)}
+        
+        Include:
+        1. Price comparison and value assessment
+        2. Feature comparison
+        3. Location advantages/disadvantages
+        4. Investment potential
+        5. Recommendation based on different buyer profiles
+        
+        Format as a structured comparison report.`;
 
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.5,
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          { role: 'system', content: 'You are a real estate comparison expert.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.6,
         max_tokens: 800,
       });
 
-      return completion.choices[0].message.content;
+      return response.choices[0].message.content;
     } catch (error) {
-      console.error('Market Insights Error:', error);
-      throw error;
+      console.error('OpenAI comparison error:', error);
+      throw new Error('Failed to compare properties');
     }
   }
 
-  // Property matching
-  async findSimilarProperties(userPreferences, availableProperties) {
-    try {
-      const prompt = `User is looking for:
-      ${JSON.stringify(userPreferences, null, 2)}
-      
-      Available properties:
-      ${JSON.stringify(availableProperties.slice(0, 20), null, 2)}
-      
-      Rank the top 5 most suitable properties and explain why each matches the user's needs.`;
+  // Generate neighborhood analysis
+  async analyzeNeighborhood(location) {
+    const cacheKey = this.generateCacheKey('neighborhood', { location });
+    const cached = await this.getCached(cacheKey);
+    if (cached) return cached;
 
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 1000,
+    try {
+      const prompt = `Provide a comprehensive neighborhood analysis for: ${location}
+        
+        Include:
+        1. Demographics
+        2. Safety and crime statistics
+        3. Schools and education
+        4. Transportation and commute
+        5. Shopping and entertainment
+        6. Healthcare facilities
+        7. Parks and recreation
+        8. Future development plans
+        9. Property value trends
+        10. Best suited for (families, professionals, retirees, etc.)
+        
+        Be informative and balanced.`;
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          { role: 'system', content: 'You are a neighborhood analysis expert.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.6,
+        max_tokens: 600,
       });
 
-      return completion.choices[0].message.content;
+      const analysis = response.choices[0].message.content;
+      await this.setCached(cacheKey, analysis, 86400); // Cache for 24 hours
+      return analysis;
     } catch (error) {
-      console.error('Property Matching Error:', error);
-      throw error;
+      console.error('OpenAI neighborhood analysis error:', error);
+      throw new Error('Failed to analyze neighborhood');
     }
   }
 
-  // Sentiment analysis for reviews
-  async analyzeSentiment(text) {
+  // Generate investment analysis
+  async analyzeInvestmentPotential(property, marketData) {
     try {
-      const completion = await openai.chat.completions.create({
+      const prompt = `Analyze the investment potential for this property:
+        Property: ${JSON.stringify(property, null, 2)}
+        Market Data: ${JSON.stringify(marketData, null, 2)}
+        
+        Provide:
+        1. ROI calculation and projections
+        2. Rental income potential
+        3. Capital appreciation forecast
+        4. Risk assessment
+        5. Financing recommendations
+        6. Tax implications
+        7. Exit strategy options
+        8. Overall investment score (1-10)
+        
+        Be specific with numbers and percentages where possible.`;
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          { role: 'system', content: 'You are a real estate investment analyst.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.5,
+        max_tokens: 700,
+      });
+
+      return response.choices[0].message.content;
+    } catch (error) {
+      console.error('OpenAI investment analysis error:', error);
+      throw new Error('Failed to analyze investment potential');
+    }
+  }
+
+  // Extract structured data from text
+  async extractStructuredData(text, schema) {
+    try {
+      const prompt = `Extract structured data from the following text according to the schema:
+        
+        Text: ${text}
+        
+        Schema: ${JSON.stringify(schema, null, 2)}
+        
+        Return a valid JSON object matching the schema. If a field cannot be determined, use null.`;
+
+      const response = await this.openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
-          {
-            role: 'user',
-            content: `Analyze the sentiment of this review and provide a score from -1 (very negative) to 1 (very positive), and identify key themes:
-            
-            "${text}"
-            
-            Response format:
-            Score: [number]
-            Sentiment: [Positive/Neutral/Negative]
-            Key Themes: [list]
-            Concerns: [list if any]`,
-          },
+          { role: 'system', content: 'You are a data extraction specialist. Always return valid JSON.' },
+          { role: 'user', content: prompt }
         ],
         temperature: 0.3,
-        max_tokens: 300,
+        max_tokens: 500,
       });
 
-      return this.parseSentimentResponse(completion.choices[0].message.content);
+      return JSON.parse(response.choices[0].message.content);
     } catch (error) {
-      console.error('Sentiment Analysis Error:', error);
-      throw error;
-    }
-  }
-
-  parseSentimentResponse(content) {
-    const lines = content.split('\n');
-    const result = {
-      score: 0,
-      sentiment: 'neutral',
-      themes: [],
-      concerns: [],
-    };
-
-    lines.forEach((line) => {
-      if (line.includes('Score:')) {
-        result.score = parseFloat(line.split(':')[1].trim());
-      } else if (line.includes('Sentiment:')) {
-        result.sentiment = line.split(':')[1].trim().toLowerCase();
-      }
-    });
-
-    return result;
-  }
-
-  // Content moderation
-  async moderateContent(content) {
-    try {
-      const moderation = await openai.moderations.create({
-        input: content,
-      });
-
-      const result = moderation.results[0];
-
-      return {
-        flagged: result.flagged,
-        categories: result.categories,
-        categoryScores: result.category_scores,
-        safe: !result.flagged,
-      };
-    } catch (error) {
-      console.error('Content Moderation Error:', error);
-      throw error;
-    }
-  }
-
-  // Smart search query enhancement
-  async enhanceSearchQuery(query) {
-    try {
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'user',
-            content: `Convert this natural language search into structured property search criteria:
-            
-            "${query}"
-            
-            Return JSON format:
-            {
-              "propertyType": "",
-              "location": "",
-              "minPrice": 0,
-              "maxPrice": 0,
-              "bedrooms": 0,
-              "bathrooms": 0,
-              "amenities": [],
-              "keywords": []
-            }`,
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 300,
-      });
-
-      const content = completion.choices[0].message.content;
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Query Enhancement Error:', error);
-      return null;
+      console.error('OpenAI data extraction error:', error);
+      throw new Error('Failed to extract structured data');
     }
   }
 }

@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-node';
 import Property from '../../models/Property.js';
 import User from '../../models/User.js';
-import AuditLog from '../../models/AuditLog.js';
+import AuditLog from '../../models/Auditlog.js';
 
 class FraudDetectionService {
   constructor() {

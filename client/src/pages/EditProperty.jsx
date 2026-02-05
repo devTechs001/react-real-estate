@@ -4,6 +4,7 @@ import { propertyService } from '../services/PropertyService';
 import PropertyForm from '../components/forms/PropertyForm';
 import Loader from '../components/common/Loader';
 import toast from 'react-hot-toast';
+import '../styles/EditProperty.css';
 
 const EditProperty = () => {
   const { id } = useParams();

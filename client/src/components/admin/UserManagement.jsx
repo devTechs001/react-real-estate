@@ -1,8 +1,25 @@
 import { useState, useEffect } from 'react';
-import { FaSearch, FaEdit, FaTrash, FaShield, FaUser } from 'react-icons/fa';
+import { 
+  FaSearch, 
+  FaEdit, 
+  FaTrash, 
+  FaShield, 
+  FaUser, 
+  FaFilter,
+  FaDownload,
+  FaCheckSquare,
+  FaSquare,
+  FaEnvelope,
+  FaBan,
+  FaCheck,
+} from 'react-icons/fa';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import Loader from '../common/Loader';
+import Modal from '../ui/Modal';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Select from '../ui/Select';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -11,15 +28,37 @@ const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [filters, setFilters] = useState({
+    role: 'all',
+    status: 'all',
+    dateRange: 'all',
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  });
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
   const usersPerPage = 10;
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [filters, search]);
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
-      const { data } = await api.get('/admin/users');
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (filters.role !== 'all') params.append('role', filters.role);
+      if (filters.status !== 'all') params.append('status', filters.status);
+      if (filters.dateRange !== 'all') params.append('dateRange', filters.dateRange);
+      params.append('sortBy', filters.sortBy);
+      params.append('sortOrder', filters.sortOrder);
+
+      const { data } = await api.get(`/admin/users?${params}`);
       setUsers(data);
     } catch (error) {
       toast.error('Failed to load users');
@@ -55,10 +94,118 @@ const UserManagement = () => {
     }
   };
 
-  const filteredUsers = users.filter(user =>
-    user.email?.toLowerCase().includes(search.toLowerCase()) ||
-    user.name?.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleToggleUserStatus = async (userId) => {
+    try {
+      const user = users.find(u => u._id === userId);
+      const newStatus = !user.isActive;
+      await api.put(`/admin/users/${userId}`, { isActive: newStatus });
+      setUsers(users.map(u => u._id === userId ? { ...u, isActive: newStatus } : u));
+      toast.success(`User ${newStatus ? 'activated' : 'deactivated'}`);
+    } catch (error) {
+      toast.error('Failed to update user status');
+    }
+  };
+
+  const handleSelectUser = (userId) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const handleSelectAllUsers = () => {
+    if (selectedUsers.length === filteredUsers.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(filteredUsers.map(u => u._id));
+    }
+  };
+
+  const handleBulkAction = async (action) => {
+    if (selectedUsers.length === 0) {
+      toast.error('No users selected');
+      return;
+    }
+
+    try {
+      const endpoint = `/admin/users/bulk-${action}`;
+      await api.post(endpoint, { userIds: selectedUsers });
+      
+      const actionMessages = {
+        delete: 'deleted',
+        activate: 'activated',
+        deactivate: 'deactivated',
+        'send-email': 'email sent'
+      };
+
+      toast.success(`${selectedUsers.length} users ${actionMessages[action]}`);
+      setSelectedUsers([]);
+      setShowBulkActions(false);
+      fetchUsers();
+    } catch (error) {
+      toast.error(`Failed to ${action} users`);
+    }
+  };
+
+  const handleSendBulkEmail = async () => {
+    if (!emailSubject || !emailMessage) {
+      toast.error('Please provide subject and message');
+      return;
+    }
+
+    try {
+      await api.post('/admin/users/send-bulk-email', {
+        userIds: selectedUsers,
+        subject: emailSubject,
+        message: emailMessage
+      });
+      
+      toast.success('Email sent successfully');
+      setShowEmailModal(false);
+      setEmailSubject('');
+      setEmailMessage('');
+      setSelectedUsers([]);
+    } catch (error) {
+      toast.error('Failed to send email');
+    }
+  };
+
+  const handleExportUsers = async (format) => {
+    try {
+      const response = await api.get(`/admin/users/export?format=${format}`, {
+        responseType: 'blob'
+      });
+      
+      const blob = new Blob([response.data], {
+        type: format === 'csv' ? 'text/csv' : 'application/vnd.ms-excel'
+      });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `users-${new Date().toISOString().split('T')[0]}.${format}`;
+      a.click();
+      
+      toast.success(`Users exported as ${format.toUpperCase()}`);
+    } catch (error) {
+      toast.error('Failed to export users');
+    }
+  };
+
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = 
+      user.email?.toLowerCase().includes(search.toLowerCase()) ||
+      user.name?.toLowerCase().includes(search.toLowerCase()) ||
+      user.phone?.includes(search);
+    
+    const matchesRole = filters.role === 'all' || user.role === filters.role;
+    const matchesStatus = filters.status === 'all' || 
+      (filters.status === 'active' && user.isActive) ||
+      (filters.status === 'inactive' && !user.isActive);
+    
+    return matchesSearch && matchesRole && matchesStatus;
+  });
 
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
@@ -66,6 +213,10 @@ const UserManagement = () => {
   );
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  useEffect(() => {
+    setShowBulkActions(selectedUsers.length > 0);
+  }, [selectedUsers]);
 
   if (loading) return <Loader fullScreen />;
 

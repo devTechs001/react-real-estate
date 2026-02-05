@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 import { dashboardService } from '../../services/dashboardService';
 import toast from 'react-hot-toast';
+import '../../styles/admin/AdminOverview.css';
 
 const AdminOverview = () => {
   const { user } = useAuth();

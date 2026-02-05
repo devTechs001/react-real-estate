@@ -3,6 +3,7 @@ import ClientDashboard from '../components/client/ClientDashboard';
 import SellerDashboard from '../components/seller/SellerDashboard';
 import AdminDashboard from '../components/admin/AdminDashboard';
 import Loader from '../components/common/Loader';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();

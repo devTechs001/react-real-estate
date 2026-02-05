@@ -1,6 +1,6 @@
 import express from 'express';
 import { aiController } from '../controllers/aiController.js';
-import { auth } from '../middleware/auth.js';
+import { protect } from '../middleware/auth.js';
 import { aiRateLimit } from '../middleware/aiRateLimit.js';
 import { body, query, param } from 'express-validator';
 
@@ -9,7 +9,7 @@ const router = express.Router();
 // Price Prediction Routes
 router.post(
   '/predict-price',
-  auth,
+  protect,
   aiRateLimit,
   [
     body('propertyType').isString().notEmpty(),
@@ -23,7 +23,7 @@ router.post(
 
 router.get(
   '/market-trends',
-  auth,
+  protect,
   [
     query('location').isString().notEmpty(),
     query('propertyType').isString().optional()
@@ -32,11 +32,11 @@ router.get(
 );
 
 // Recommendation Routes
-router.get('/recommendations', auth, aiController.getRecommendations);
+router.get('/recommendations', protect, aiController.getRecommendations);
 
 router.get(
   '/similar-properties/:propertyId',
-  auth,
+  protect,
   [param('propertyId').isMongoId()],
   aiController.getSimilarProperties
 );
@@ -46,7 +46,7 @@ router.get('/trending-properties', aiController.getTrendingProperties);
 // Fraud Detection Routes
 router.post(
   '/check-fraud',
-  auth,
+  protect,
   aiRateLimit,
   [body('propertyData').isObject().notEmpty()],
   aiController.checkFraud
@@ -54,7 +54,7 @@ router.post(
 
 router.get(
   '/risk-profile/:userId',
-  auth,
+  protect,
   [param('userId').isMongoId()],
   aiController.getUserRiskProfile
 );
@@ -62,7 +62,7 @@ router.get(
 // Image Analysis Routes
 router.post(
   '/analyze-image',
-  auth,
+  protect,
   aiRateLimit,
   [body('imageUrl').isURL()],
   aiController.analyzeImage
@@ -70,7 +70,7 @@ router.post(
 
 router.post(
   '/enhance-image',
-  auth,
+  protect,
   aiRateLimit,
   [
     body('imageUrl').isURL(),
@@ -82,7 +82,7 @@ router.post(
 // NLP Routes
 router.post(
   '/generate-description',
-  auth,
+  protect,
   aiRateLimit,
   [body('propertyData').isObject().notEmpty()],
   aiController.generateDescription
@@ -90,7 +90,7 @@ router.post(
 
 router.post(
   '/answer-question',
-  auth,
+  protect,
   aiRateLimit,
   [
     body('propertyId').isMongoId(),
@@ -101,7 +101,7 @@ router.post(
 
 router.post(
   '/extract-keywords',
-  auth,
+  protect,
   [body('text').isString().notEmpty()],
   aiController.extractKeywords
 );
@@ -109,7 +109,7 @@ router.post(
 // Market Insights Routes
 router.get(
   '/market-insights',
-  auth,
+  protect,
   [
     query('location').isString().notEmpty(),
     query('propertyType').isString().optional()
@@ -119,7 +119,7 @@ router.get(
 
 router.post(
   '/compare-properties',
-  auth,
+  protect,
   aiRateLimit,
   [body('propertyIds').isArray().notEmpty()],
   aiController.compareProperties
@@ -127,14 +127,14 @@ router.post(
 
 router.get(
   '/analyze-neighborhood',
-  auth,
+  protect,
   [query('location').isString().notEmpty()],
   aiController.analyzeNeighborhood
 );
 
 router.get(
   '/analyze-investment/:propertyId',
-  auth,
+  protect,
   aiRateLimit,
   [param('propertyId').isMongoId()],
   aiController.analyzeInvestment
@@ -143,7 +143,7 @@ router.get(
 // Sentiment Analysis Routes
 router.get(
   '/analyze-reviews/:propertyId',
-  auth,
+  protect,
   [param('propertyId').isMongoId()],
   aiController.analyzeReviews
 );

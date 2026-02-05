@@ -4,6 +4,7 @@ import { FaLock } from 'react-icons/fa';
 import { authService } from '../services/authService';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
+import '../styles/ResetPassword.css';
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();

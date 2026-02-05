@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../../components/common/SEO';
+import '../../styles/admin/AdminDashboard.css';
 
 const AdminDashboard = () => {
   const location = useLocation();

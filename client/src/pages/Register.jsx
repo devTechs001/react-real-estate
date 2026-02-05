@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/Register.css';
 
 const Register = () => {
   const navigate = useNavigate();

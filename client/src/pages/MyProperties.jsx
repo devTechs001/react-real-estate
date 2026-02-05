@@ -7,6 +7,7 @@ import PropertyCard from '../components/property/PropertyCard';
 import Loader from '../components/common/Loader';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/MyProperties.css';
 
 const MyProperties = () => {
   const [properties, setProperties] = useState([]);

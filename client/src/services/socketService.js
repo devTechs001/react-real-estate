@@ -6,7 +6,7 @@ class SocketService {
   }
 
   connect(token) {
-    this.socket = io(import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000', {
+    this.socket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000', {
       auth: { token },
     });
 

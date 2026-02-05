@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import PropertyForm from '@/components/forms/PropertyForm';
 import SEO from '@/components/common/SEO';
+import '../styles/AddProperty.css';
 
 const AddProperty = () => {
   const navigate = useNavigate();

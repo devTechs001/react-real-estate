@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Loader from '@/components/common/Loader';
 import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
+import '../styles/InviteLink.css';
 
 const InviteLink = () => {
   const { code } = useParams();

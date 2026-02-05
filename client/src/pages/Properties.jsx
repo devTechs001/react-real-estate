@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
+import '../styles/Properties.css';
 
 const Properties = () => {
   const [searchParams, setSearchParams] = useSearchParams();

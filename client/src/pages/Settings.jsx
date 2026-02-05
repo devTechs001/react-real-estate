@@ -5,6 +5,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/Settings.css';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('account');

@@ -5,6 +5,7 @@ import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Tabs from '../components/ui/Tabs';
 import toast from 'react-hot-toast';
+import '../styles/Profile.css';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();

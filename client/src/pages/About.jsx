@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
+import '../styles/About.css';
 
 const About = () => {
   const team = [

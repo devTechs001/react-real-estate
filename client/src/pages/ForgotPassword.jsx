@@ -4,6 +4,7 @@ import { FaEnvelope } from 'react-icons/fa';
 import { authService } from '../services/authService';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
+import '../styles/ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

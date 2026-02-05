@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FaHome, FaSearch, FaArrowLeft } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import SEO from '../components/common/SEO';
+import '../styles/NotFound.css';
 
 const NotFound = () => {
   return (

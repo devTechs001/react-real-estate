@@ -1,0 +1,167 @@
+/* Invite Link Page Styles */
+.invite-link-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.invite-link-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.invite-link-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.invite-link-subtitle {
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+}
+
+.invite-link-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.invite-link-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.role-selector {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.role-option {
+  flex: 1;
+  min-width: 120px;
+  padding: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.role-option.selected {
+  border-color: #3498db;
+  background-color: #eaf7ff;
+}
+
+.role-option:hover {
+  border-color: #3498db;
+}
+
+.role-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #3498db;
+}
+
+.role-name {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.generate-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.generate-button:hover {
+  background-color: #2980b9;
+}
+
+.generated-link-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.generated-link-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.generated-link {
+  word-break: break-all;
+  color: #3498db;
+  margin-bottom: 1rem;
+}
+
+.copy-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: #27ae60;
+}
+
+.expiration-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fff8e1;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.expiration-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.expiration-text {
+  color: #555;
+}

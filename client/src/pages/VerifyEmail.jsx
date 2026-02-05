@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/VerifyEmail.css';
 
 const VerifyEmail = () => {
   const location = useLocation();

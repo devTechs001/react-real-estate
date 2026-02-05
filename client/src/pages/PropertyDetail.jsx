@@ -6,6 +6,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/PropertyDetail.css';
 
 const PropertyDetails = () => {
   const { id } = useParams();

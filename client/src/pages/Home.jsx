@@ -7,6 +7,7 @@ import Header from '../components/common/Header';
 import PropertyCard from '../components/property/PropertyCard';
 import SEO from '../components/common/SEO';
 import { propertyService } from '../services/PropertyService';
+import '../styles/Home.scss';
 
 const Home = () => {
   const navigate = useNavigate();

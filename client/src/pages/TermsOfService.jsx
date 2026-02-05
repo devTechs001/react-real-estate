@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
+import '../styles/TermsOfService.css';
 
 const TermsOfService = () => {
   const lastUpdated = 'January 15, 2024';

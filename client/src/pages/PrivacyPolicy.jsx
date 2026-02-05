@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
+import '../styles/PrivacyPolicy.css';
 
 const PrivacyPolicy = () => {
   const lastUpdated = 'January 15, 2024';

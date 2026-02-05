@@ -5,6 +5,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SEO from '../components/common/SEO';
 import toast from 'react-hot-toast';
+import '../styles/Contact.css';
 
 const Contact = () => {
   const [formData, setFormData] = useState({

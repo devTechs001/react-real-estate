@@ -265,21 +265,21 @@ const ChatBot = () => {
         className="fixed bottom-6 right-6 z-50"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 200, 
+        transition={{
+          type: "spring",
+          stiffness: 200,
           damping: 15,
-          delay: 0.2 
+          delay: 0.2
         }}
       >
         {/* Pulse animation behind button */}
         <motion.div
           className="absolute -inset-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 opacity-75 blur-sm"
-          animate={{ 
+          animate={{
             scale: [1, 1.6, 1],
             opacity: [0.7, 0, 0.7]
           }}
-          transition={{ 
+          transition={{
             duration: 2,
             repeat: Infinity,
             ease: "easeInOut"
@@ -319,12 +319,12 @@ const ChatBot = () => {
           {/* Notification badge */}
           {!isOpen && (
             <motion.div
-              animate={{ 
+              animate={{
                 scale: [1, 1.3, 1],
                 y: [0, -5, 0]
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -349,28 +349,28 @@ const ChatBot = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ 
-              opacity: 0, 
-              y: 100, 
+            initial={{
+              opacity: 0,
+              y: 100,
               scale: 0.8,
               x: '100%'
             }}
-            animate={{ 
-              opacity: 1, 
-              y: 0, 
+            animate={{
+              opacity: 1,
+              y: 0,
               scale: 1,
               x: '0%'
             }}
-            exit={{ 
-              opacity: 0, 
-              y: 100, 
+            exit={{
+              opacity: 0,
+              y: 100,
               scale: 0.8,
               x: '100%'
             }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 30 
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30
             }}
             className="fixed bottom-24 right-6 w-[500px] max-w-[95vw] h-[550px] bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl shadow-2xl z-50 flex flex-col border border-white/20 backdrop-blur-xl overflow-hidden"
           >
@@ -394,14 +394,16 @@ const ChatBot = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="relative">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setShowOptionsMenu(!showOptionsMenu)}
                     className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
                     title="Options"
                   >
                     <FaEllipsisH size={14} />
-                  </button>
-                  
+                  </motion.button>
+
                   {/* Options Menu */}
                   <AnimatePresence>
                     {showOptionsMenu && (
@@ -411,52 +413,58 @@ const ChatBot = () => {
                         exit={{ opacity: 0, scale: 0.8, y: -10 }}
                         className="absolute right-0 top-10 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 py-2 w-48 z-10"
                       >
-                        <button
+                        <motion.button
+                          whileHover={{ backgroundColor: 'rgba(243, 244, 246, 1)' }}
                           onClick={() => { clearChat(); setShowOptionsMenu(false); }}
                           className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-sm"
                         >
                           <FaRedo size={12} /> Clear chat
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ backgroundColor: 'rgba(243, 244, 246, 1)' }}
                           onClick={() => { exportChat(); setShowOptionsMenu(false); }}
                           className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-sm"
                         >
                           <FaHistory size={12} /> Export chat
-                        </button>
+                        </motion.button>
                         <div className="border-t border-gray-200 my-1"></div>
-                        <button
+                        <motion.button
+                          whileHover={{ backgroundColor: 'rgba(224, 231, 255, 1)', color: '#2563eb' }}
                           onClick={() => { setChatMode('normal'); setShowOptionsMenu(false); }}
                           className={`w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-sm ${chatMode === 'normal' ? 'bg-blue-50 text-blue-600' : ''}`}
                         >
                           <FaSearch size={12} /> Normal Mode
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ backgroundColor: 'rgba(224, 231, 255, 1)', color: '#2563eb' }}
                           onClick={() => { setChatMode('expert'); setShowOptionsMenu(false); }}
                           className={`w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-sm ${chatMode === 'expert' ? 'bg-blue-50 text-blue-600' : ''}`}
                         >
                           <FaChartLine size={12} /> Expert Mode
-                        </button>
+                        </motion.button>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setIsOpen(false)}
                   className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
                 >
                   <FaTimes size={16} />
-                </button>
+                </motion.button>
               </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-transparent to-white/10">
-              {messages.map((message) => (
+              {messages.map((message, index) => (
                 <motion.div
                   key={message.id}
                   initial={{ opacity: 0, y: 10, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.2, delay: index * 0.05 }}
                   className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.role === 'assistant' && (
@@ -470,10 +478,10 @@ const ChatBot = () => {
                       message.role === 'user'
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-br-none shadow-lg'
                         : 'bg-white/90 text-gray-800 rounded-bl-none shadow-lg border border-white/50'
-                    }`}
+                    } backdrop-blur-sm`}
                   >
                     <p className="text-sm">{message.content}</p>
-                    
+
                     {/* Message attachments */}
                     {message.attachments.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
@@ -485,13 +493,15 @@ const ChatBot = () => {
                         ))}
                       </div>
                     )}
-                    
+
                     <div className="flex items-center justify-between mt-2">
                       <p className="text-xs opacity-70">{message.timestamp}</p>
                       <div className="flex gap-1">
                         {message.role === 'assistant' && (
                           <>
-                            <button
+                            <motion.button
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
                               onClick={() => handleFeedback(message.id, true)}
                               className={`p-1 rounded-full transition-colors ${
                                 message.liked === true ? 'text-green-600 bg-green-100' : 'text-gray-400 hover:text-green-600'
@@ -499,8 +509,10 @@ const ChatBot = () => {
                               title="Helpful"
                             >
                               <FaThumbsUp size={12} />
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
                               onClick={() => handleFeedback(message.id, false)}
                               className={`p-1 rounded-full transition-colors ${
                                 message.liked === false ? 'text-red-600 bg-red-100' : 'text-gray-400 hover:text-red-600'
@@ -508,10 +520,12 @@ const ChatBot = () => {
                               title="Not helpful"
                             >
                               <FaThumbsDown size={12} />
-                            </button>
+                            </motion.button>
                           </>
                         )}
-                        <button
+                        <motion.button
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => toggleSaveMessage(message.id)}
                           className={`p-1 rounded-full transition-colors ${
                             message.saved ? 'text-yellow-600 bg-yellow-100' : 'text-gray-400 hover:text-yellow-600'
@@ -519,7 +533,7 @@ const ChatBot = () => {
                           title={message.saved ? "Unsave" : "Save"}
                         >
                           {message.saved ? <FaStar size={12} /> : <FaRegStar size={12} />}
-                        </button>
+                        </motion.button>
                       </div>
                     </div>
                   </div>
@@ -541,12 +555,24 @@ const ChatBot = () => {
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center shadow-lg">
                     <FaRobot size={18} />
                   </div>
-                  <div className="bg-white/90 p-4 rounded-2xl rounded-bl-none shadow-lg border border-white/50">
+                  <div className="bg-white/90 p-4 rounded-2xl rounded-bl-none shadow-lg border border-white/50 backdrop-blur-sm">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1">
-                        <div className="w-2.5 h-2.5 bg-blue-400 rounded-full animate-bounce"></div>
-                        <div className="w-2.5 h-2.5 bg-blue-400 rounded-full animate-bounce delay-100"></div>
-                        <div className="w-2.5 h-2.5 bg-blue-400 rounded-full animate-bounce delay-200"></div>
+                        <motion.div
+                          className="w-2.5 h-2.5 bg-blue-400 rounded-full"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                        />
+                        <motion.div
+                          className="w-2.5 h-2.5 bg-blue-400 rounded-full"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                        />
+                        <motion.div
+                          className="w-2.5 h-2.5 bg-blue-400 rounded-full"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                        />
                       </div>
                       <span className="text-sm text-gray-500">AI is thinking...</span>
                     </div>
@@ -562,14 +588,16 @@ const ChatBot = () => {
                   className="flex flex-wrap gap-2 mt-2"
                 >
                   {suggestedActions.map((action, idx) => (
-                    <button
+                    <motion.button
                       key={idx}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => setInput(action.text)}
-                      className="flex items-center gap-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded-full text-xs transition-colors"
+                      className="flex items-center gap-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded-full text-xs transition-colors shadow-sm"
                     >
                       <span>{action.icon}</span>
                       <span>{action.text}</span>
-                    </button>
+                    </motion.button>
                   ))}
                 </motion.div>
               )}
@@ -595,6 +623,8 @@ const ChatBot = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => handleQuickSuggestion(suggestion)}
                       className="text-xs bg-white/80 hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full border border-blue-200/50 transition-all flex items-center gap-1 shadow-sm backdrop-blur-sm"
                     >
@@ -613,12 +643,14 @@ const ChatBot = () => {
                   <div key={idx} className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
                     <FaFile size={10} />
                     <span>{file.name}</span>
-                    <button 
+                    <motion.button
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => setSelectedFiles(prev => prev.filter((_, i) => i !== idx))}
                       className="text-red-500 hover:text-red-700"
                     >
                       ×
-                    </button>
+                    </motion.button>
                   </div>
                 ))}
               </div>
@@ -637,25 +669,29 @@ const ChatBot = () => {
                     className="w-full px-4 py-3 pr-24 border border-gray-300/50 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/90 backdrop-blur-sm shadow-sm text-gray-900"
                     disabled={isLoading}
                   />
-                  
+
                   {/* Input toolbar */}
                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
-                    <button
+                    <motion.button
                       type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                       className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                       title="Emojis"
                     >
                       <FaSmile size={14} />
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => document.getElementById('file-upload').click()}
                       className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                       title="Attach file"
                     >
                       <FaPaperPlane size={14} />
-                    </button>
+                    </motion.button>
                     <input
                       id="file-upload"
                       type="file"
@@ -665,7 +701,7 @@ const ChatBot = () => {
                     />
                   </div>
                 </div>
-                
+
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -676,7 +712,7 @@ const ChatBot = () => {
                   <FaPaperPlane size={16} />
                 </motion.button>
               </form>
-              
+
               {/* Emoji picker */}
               <AnimatePresence>
                 {showEmojiPicker && (
@@ -684,21 +720,23 @@ const ChatBot = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute bottom-20 left-4 bg-white rounded-lg shadow-lg border border-gray-200 p-2 grid grid-cols-5 gap-1"
+                    className="absolute bottom-20 left-4 bg-white rounded-lg shadow-xl border border-gray-200 p-2 grid grid-cols-5 gap-1"
                   >
                     {emojis.map((emoji, idx) => (
-                      <button
+                      <motion.button
                         key={idx}
+                        whileHover={{ scale: 1.2, backgroundColor: 'rgba(243, 244, 246, 1)' }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => insertEmoji(emoji)}
                         className="p-2 hover:bg-gray-100 rounded text-lg"
                       >
                         {emoji}
-                      </button>
+                      </motion.button>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
-              
+
               <p className="text-xs text-gray-500 mt-2 text-center">
                 AI Assistant • Responses are simulated
               </p>

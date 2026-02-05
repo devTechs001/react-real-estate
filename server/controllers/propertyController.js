@@ -162,7 +162,23 @@ export const getUserProperties = async (req, res) => {
   try {
     const properties = await Property.find({ owner: req.user._id })
       .sort('-createdAt');
-    
+
+    res.json(properties);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get featured properties
+// @route   GET /api/properties/featured
+// @access  Public
+export const getFeaturedProperties = async (req, res) => {
+  try {
+    const properties = await Property.find({ featured: true })
+      .populate('owner', 'name email phone')
+      .sort('-createdAt')
+      .limit(12); // Limit to 12 featured properties
+
     res.json(properties);
   } catch (error) {
     res.status(500).json({ message: error.message });

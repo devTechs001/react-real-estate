@@ -409,12 +409,31 @@ const AIAssistant = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.1, rotate: 10 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-gradient-to-r from-primary-600 to-primary-700 rounded-full shadow-2xl flex items-center justify-center text-white"
+            className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-full shadow-2xl flex items-center justify-center text-white border-4 border-white hover:shadow-3xl transition-all duration-300"
           >
-            <FaRobot className="text-2xl" />
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
+            >
+              <FaRobot className="text-2xl" />
+            </motion.div>
+
+            {/* Pulse animation */}
+            <motion.div
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-700 opacity-75"
+              animate={{
+                scale: [1, 1.4, 1],
+                opacity: [0.7, 0, 0.7]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
           </motion.button>
         )}
       </AnimatePresence>
@@ -426,175 +445,246 @@ const AIAssistant = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`fixed z-50 bg-white rounded-2xl shadow-2xl ${
-              isExpanded 
-                ? 'inset-4' 
+            className={`fixed z-50 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl shadow-2xl border border-white/20 backdrop-blur-xl overflow-hidden ${
+              isExpanded
+                ? 'inset-4'
                 : 'bottom-6 right-6 w-96 h-[600px]'
             }`}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 rounded-t-2xl">
+            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-4 rounded-t-2xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
+                    className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"
+                  >
                     <FaRobot className="text-xl" />
-                  </div>
+                  </motion.div>
                   <div>
-                    <h3 className="font-semibold">AI Assistant</h3>
-                    <p className="text-xs opacity-90">Always here to help</p>
+                    <h3 className="font-bold text-lg">AI Assistant</h3>
+                    <p className="text-xs opacity-90 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                      Online • Always here to help
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
+                <div className="flex items-center gap-1">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={toggleMute}
                     className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    title="Toggle sound"
                   >
                     {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsExpanded(!isExpanded)}
                     className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    title={isExpanded ? "Collapse" : "Expand"}
                   >
                     {isExpanded ? <FaCompress /> : <FaExpand />}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={clearChat}
                     className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    title="Clear chat"
                   >
                     <FaHistory />
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(false)}
                     className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    title="Close"
                   >
                     <FaTimes />
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
               {/* Mode Selector */}
               <div className="flex gap-2 mt-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setMode('chat')}
-                  className={`px-3 py-1 rounded-full text-xs transition-all ${
-                    mode === 'chat' 
-                      ? 'bg-white text-primary-600' 
+                  className={`px-3 py-1.5 rounded-full text-xs transition-all flex items-center gap-1 ${
+                    mode === 'chat'
+                      ? 'bg-white text-blue-600 shadow-md'
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
+                  <FaRobot className="text-xs" />
                   Chat
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setMode('search')}
-                  className={`px-3 py-1 rounded-full text-xs transition-all ${
-                    mode === 'search' 
-                      ? 'bg-white text-primary-600' 
+                  className={`px-3 py-1.5 rounded-full text-xs transition-all flex items-center gap-1 ${
+                    mode === 'search'
+                      ? 'bg-white text-blue-600 shadow-md'
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  <FaSearch className="inline mr-1" />
+                  <FaSearch className="text-xs" />
                   Search
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setMode('analyze')}
-                  className={`px-3 py-1 rounded-full text-xs transition-all ${
-                    mode === 'analyze' 
-                      ? 'bg-white text-primary-600' 
+                  className={`px-3 py-1.5 rounded-full text-xs transition-all flex items-center gap-1 ${
+                    mode === 'analyze'
+                      ? 'bg-white text-blue-600 shadow-md'
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  <FaChartLine className="inline mr-1" />
+                  <FaChartLine className="text-xs" />
                   Analyze
-                </button>
+                </motion.button>
               </div>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ height: isExpanded ? 'calc(100% - 200px)' : '380px' }}>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-transparent to-white/10" style={{ height: isExpanded ? 'calc(100% - 200px)' : '380px' }}>
               {messages.length === 0 ? (
                 <div className="text-center py-8">
-                  <FaRobot className="text-6xl text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <FaRobot className="text-6xl text-blue-400 mx-auto mb-4" />
+                  </motion.div>
+                  <motion.h3
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-lg font-semibold text-gray-800 mb-2"
+                  >
                     Hello! I'm your AI Assistant
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-6">
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-sm text-gray-600 mb-6"
+                  >
                     Ask me anything about real estate, properties, or market trends
-                  </p>
-                  
+                  </motion.p>
+
                   {/* Suggestions */}
-                  <div className="grid grid-cols-2 gap-2">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="grid grid-cols-1 gap-2"
+                  >
                     {suggestions.map((suggestion, index) => (
-                      <button
+                      <motion.button
                         key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 + index * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="flex items-center gap-2 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-left text-sm transition-colors"
+                        className="flex items-center justify-center gap-2 p-3 bg-white/80 hover:bg-white rounded-lg text-left text-sm transition-all shadow-sm backdrop-blur-sm border border-white/50"
                       >
-                        {suggestion.icon && <suggestion.icon className="text-primary-600" />}
+                        {suggestion.icon && <suggestion.icon className="text-blue-600" />}
                         <span className="text-gray-700">{suggestion.text}</span>
-                      </button>
+                      </motion.button>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               ) : (
                 <>
-                  {messages.map((message) => (
+                  {messages.map((message, index) => (
                     <motion.div
                       key={message.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
                       className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
+                      {message.type === 'assistant' && (
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center flex-shrink-0 mr-2 shadow-lg">
+                          <FaRobot size={14} />
+                        </div>
+                      )}
+
                       <div
                         className={`max-w-[80%] ${
                           message.type === 'user'
-                            ? 'bg-primary-600 text-white rounded-l-2xl rounded-tr-2xl'
-                            : 'bg-gray-100 text-gray-800 rounded-r-2xl rounded-tl-2xl'
-                        } p-4`}
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-l-2xl rounded-tr-2xl shadow-lg'
+                            : 'bg-white/90 text-gray-800 rounded-r-2xl rounded-tl-2xl shadow-lg border border-white/50'
+                        } p-4 backdrop-blur-sm`}
                       >
                         <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                        
+
                         {/* Display data if available */}
                         {message.data && (
-                          <div className="mt-3 pt-3 border-t border-white/20">
+                          <div className={`mt-3 pt-3 border-t ${message.type === 'user' ? 'border-white/20' : 'border-gray-200/50'}`}>
                             {/* Render data based on type */}
                             {Array.isArray(message.data) ? (
                               <div className="space-y-2">
-                                {message.data.slice(0, 3).map((item, index) => (
-                                  <div key={index} className="text-xs opacity-90">
+                                {message.data.slice(0, 3).map((item, idx) => (
+                                  <div key={idx} className={`text-xs ${message.type === 'user' ? 'text-blue-100' : 'text-gray-600'}`}>
                                     {item.title || item.name}
                                   </div>
                                 ))}
                               </div>
                             ) : (
-                              <div className="text-xs opacity-90">
+                              <div className={`text-xs ${message.type === 'user' ? 'text-blue-100' : 'text-gray-600'}`}>
                                 {JSON.stringify(message.data, null, 2)}
                               </div>
                             )}
                           </div>
                         )}
-                        
+
                         {/* Suggestions */}
                         {message.suggestions && message.suggestions.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-2">
-                            {message.suggestions.map((suggestion, index) => (
-                              <button
-                                key={index}
+                          <div className={`mt-3 pt-3 border-t ${message.type === 'user' ? 'border-white/20' : 'border-gray-200/50'} flex flex-wrap gap-2`}>
+                            {message.suggestions.map((suggestion, idx) => (
+                              <motion.button
+                                key={idx}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={() => handleSuggestionClick(suggestion)}
-                                className="text-xs px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                                className={`text-xs px-3 py-1.5 rounded-full transition-all ${
+                                  message.type === 'user'
+                                    ? 'bg-white/20 hover:bg-white/30 text-white'
+                                    : 'bg-blue-100 hover:bg-blue-200 text-blue-700'
+                                }`}
                               >
                                 {suggestion.text}
-                              </button>
+                              </motion.button>
                             ))}
                           </div>
                         )}
-                        
-                        <p className="text-xs opacity-70 mt-2">
+
+                        <p className={`text-xs ${message.type === 'user' ? 'text-blue-100/80' : 'text-gray-500'} mt-2`}>
                           {new Date(message.timestamp).toLocaleTimeString()}
                         </p>
                       </div>
+
+                      {message.type === 'user' && (
+                        <div className="w-8 h-8 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-full flex items-center justify-center flex-shrink-0 ml-2 shadow-lg">
+                          <FaUser size={14} />
+                        </div>
+                      )}
                     </motion.div>
                   ))}
-                  
+
                   {/* Typing Indicator */}
                   {isTyping && (
                     <motion.div
@@ -602,77 +692,102 @@ const AIAssistant = () => {
                       animate={{ opacity: 1 }}
                       className="flex justify-start"
                     >
-                      <div className="bg-gray-100 rounded-2xl p-4 flex items-center gap-2">
-                        <FaSpinner className="animate-spin text-primary-600" />
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center flex-shrink-0 mr-2 shadow-lg">
+                        <FaRobot size={14} />
+                      </div>
+                      <div className="bg-white/90 rounded-2xl p-4 flex items-center gap-2 shadow-lg border border-white/50 backdrop-blur-sm">
+                        <div className="flex gap-1">
+                          <motion.div
+                            className="w-2 h-2 bg-blue-400 rounded-full"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                          />
+                          <motion.div
+                            className="w-2 h-2 bg-blue-400 rounded-full"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                          />
+                          <motion.div
+                            className="w-2 h-2 bg-blue-400 rounded-full"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                          />
+                        </div>
                         <span className="text-sm text-gray-600">AI is thinking...</span>
                       </div>
                     </motion.div>
                   )}
-                  
+
                   <div ref={messagesEndRef} />
                 </>
               )}
             </div>
 
             {/* Input Area */}
-            <div className="border-t p-4">
+            <div className="border-t border-white/20 bg-white/50 backdrop-blur-sm p-4">
               <div className="flex items-center gap-2">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleVoiceInput}
-                  className={`p-3 rounded-lg transition-all ${
+                  className={`p-3 rounded-full transition-all ${
                     isListening
-                      ? 'bg-red-500 text-white animate-pulse'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                      ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30'
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-600 shadow-sm'
                   }`}
+                  title={isListening ? "Stop listening" : "Start voice input"}
                 >
                   {isListening ? <FaStop /> : <FaMicrophone />}
-                </button>
-                
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder={`Ask me anything about real estate...`}
-                  className="flex-1 px-4 py-3 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                
-                <button
-                  onClick={handleSend}
-                  disabled={!input.trim() || isTyping}
-                  className={`p-3 rounded-lg transition-all ${
-                    input.trim() && !isTyping
-                      ? 'bg-primary-600 hover:bg-primary-700 text-white'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  {isTyping ? <FaSpinner className="animate-spin" /> : <FaPaperPlane />}
-                </button>
+                </motion.button>
+
+                <div className="flex-1 relative">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                    placeholder={`Ask me anything about real estate...`}
+                    className="w-full px-4 py-3 pl-4 pr-12 bg-white/90 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:shadow-lg shadow-sm text-sm text-gray-900 backdrop-blur-sm border border-gray-200/50"
+                  />
+
+                  {/* Send button inside input */}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleSend}
+                    disabled={!input.trim() || isTyping}
+                    className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-all ${
+                      input.trim() && !isTyping
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {isTyping ? <FaSpinner className="animate-spin" /> : <FaPaperPlane />}
+                  </motion.button>
+                </div>
               </div>
-              
+
               {/* Quick Actions */}
               <div className="flex gap-2 mt-3 flex-wrap">
-                <button
-                  onClick={() => setInput('Find properties near me')}
-                  className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-                >
-                  <FaLightbulb className="inline mr-1" />
-                  Near me
-                </button>
-                <button
-                  onClick={() => setInput('Show market trends')}
-                  className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-                >
-                  <FaChartLine className="inline mr-1" />
-                  Trends
-                </button>
-                <button
-                  onClick={() => setInput('Help me find my dream home')}
-                  className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-                >
-                  <FaHome className="inline mr-1" />
-                  Dream home
-                </button>
+                {[
+                  { text: 'Find properties near me', icon: <FaLightbulb />, action: () => setInput('Find properties near me') },
+                  { text: 'Show market trends', icon: <FaChartLine />, action: () => setInput('Show market trends') },
+                  { text: 'Help me find my dream home', icon: <FaHome />, action: () => setInput('Help me find my dream home') }
+                ].map((action, index) => (
+                  <motion.button
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={action.action}
+                    className="text-xs px-3 py-1.5 bg-white/80 hover:bg-white rounded-full transition-all shadow-sm backdrop-blur-sm border border-white/50 flex items-center gap-1"
+                  >
+                    {action.icon}
+                    <span>{action.text}</span>
+                  </motion.button>
+                ))}
               </div>
             </div>
           </motion.div>

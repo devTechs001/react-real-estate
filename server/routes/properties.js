@@ -6,6 +6,7 @@ import {
   updateProperty,
   deleteProperty,
   getUserProperties,
+  getFeaturedProperties,
 } from '../controllers/propertyController.js';
 import { protect } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
@@ -17,6 +18,7 @@ router.route('/')
   .post(protect, upload.array('images', 10), createProperty);
 
 router.get('/user/my-properties', protect, getUserProperties);
+router.get('/featured', getFeaturedProperties);
 
 router.route('/:id')
   .get(getProperty)

@@ -41,7 +41,42 @@ export default {
       borderRadius: {
         '4xl': '2rem',
       },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '2rem',
+          lg: '4rem',
+          xl: '5rem',
+          '2xl': '6rem',
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addComponents }) {
+      addComponents({
+        '.container-custom': {
+          maxWidth: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          '@screen sm': {
+            maxWidth: '640px',
+          },
+          '@screen md': {
+            maxWidth: '768px',
+          },
+          '@screen lg': {
+            maxWidth: '1024px',
+          },
+          '@screen xl': {
+            maxWidth: '1280px',
+          },
+          '@screen 2xl': {
+            maxWidth: '1536px',
+          },
+        }
+      })
+    }
+  ],
 }

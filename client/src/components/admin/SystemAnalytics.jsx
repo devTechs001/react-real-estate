@@ -40,9 +40,10 @@ const AdminAnalytics = () => {
   const fetchAnalyticsData = async () => {
     try {
       // Fetch dashboard stats which now includes financial metrics
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/dashboard`, {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/dashboard`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
           'Content-Type': 'application/json'
         }
       });

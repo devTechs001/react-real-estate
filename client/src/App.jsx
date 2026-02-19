@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import Loader from './components/common/Loader';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import ChatBot from './components/ai/Chatbot';
 import AISecurityWrapper from './components/AISecurityWrapper';
 import AIAssistant from './components/ai/AIAssistant';
 
@@ -78,12 +77,14 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
         </Route>
+
+        {/* ============ AUTH PAGES (Standalone - No Layout) ============ */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
         {/* ============ USER DASHBOARD ROUTES ============ */}
         <Route element={<ProtectedRoute />}>
@@ -148,10 +149,7 @@ function App() {
         }}
       />
 
-      {/* Floating ChatBot */}
-      <ChatBot />
-
-      {/* AI Assistant for public routes */}
+      {/* Floating AI Assistant */}
       <AIAssistant />
     </Suspense>
   );

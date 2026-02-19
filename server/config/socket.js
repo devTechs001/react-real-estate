@@ -3,9 +3,30 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 export const initSocket = (server) => {
+  // Define allowed origins for Socket.IO
+  const allowedOrigins = [
+    process.env.CLIENT_URL || 'http://localhost:3000',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3001',
+    'http://localhost:8080',
+    'http://localhost:8000',
+    process.env.PRODUCTION_URL,
+  ].filter(Boolean);
+
   const io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:3000',
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       credentials: true,
     },
   });

@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Header from '../../components/common/Header';
-import Footer from '../../components/common/Footer';
 import SEO from '../../components/common/SEO';
 
 const Analytics = () => {
@@ -229,8 +228,6 @@ const Analytics = () => {
             </div>
           </motion.div>
         </div>
-
-        <Footer />
       </div>
     </>
   );

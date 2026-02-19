@@ -72,7 +72,7 @@ const PropertyCard = ({ property, featured = false, compact = false }) => {
             {/* Image */}
             <div className="relative h-48 overflow-hidden">
               <img
-                src={property.images?.[0] || '/api/placeholder/400/300'}
+                src={property.images?.[0] || 'https://placehold.co/400x300/e2e8f0/64748b?text=Property+Image'}
                 alt={property.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -144,7 +144,7 @@ const PropertyCard = ({ property, featured = false, compact = false }) => {
           {/* Image Section */}
           <div className="relative h-64 overflow-hidden">
             <img
-              src={property.images?.[currentImageIndex] || '/api/placeholder/400/300'}
+              src={property.images?.[currentImageIndex] || 'https://placehold.co/400x300/e2e8f0/64748b?text=Property+Image'}
               alt={property.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
@@ -305,7 +305,7 @@ const PropertyCard = ({ property, featured = false, compact = false }) => {
             {property.agent && (
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 <img
-                  src={property.agent.avatar || '/api/placeholder/40/40'}
+                  src={property.agent.avatar || 'https://placehold.co/40x40/667eea/ffffff?text=A'}
                   alt={property.agent.name}
                   className="w-10 h-10 rounded-full border-2 border-white shadow"
                 />

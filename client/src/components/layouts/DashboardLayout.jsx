@@ -5,10 +5,10 @@ import AIAssistant from '../ai/AIAssistant';
 
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
-      <main className="flex-grow mt-20">
-        <div className="container mx-auto px-4 py-8">
+      <main className="flex-grow pt-20">
+        <div className="container mx-auto px-4 py-8 min-h-screen">
           <Outlet />
         </div>
       </main>

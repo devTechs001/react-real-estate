@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 let redisClient;
+let redisConnected = false;
 
 export const connectRedis = async () => {
   try {
@@ -13,66 +14,87 @@ export const connectRedis = async () => {
     });
 
     redisClient.on('error', (err) => {
-      console.error('Redis Client Error:', err);
+      console.error('Redis Client Error:', err.message);
+      redisConnected = false;
     });
 
     redisClient.on('connect', () => {
       console.log('✅ Redis Connected');
+      redisConnected = true;
+    });
+
+    redisClient.on('reconnecting', () => {
+      console.log('🔄 Redis Reconnecting...');
+    });
+
+    redisClient.on('end', () => {
+      console.log('⚠️ Redis Connection Ended');
+      redisConnected = false;
     });
 
     await redisClient.connect();
     return redisClient;
   } catch (error) {
-    console.error('❌ Redis Connection Error:', error);
+    console.warn('⚠️ Redis not available, continuing without caching');
+    redisConnected = false;
     return null;
   }
 };
 
+export const isRedisConnected = () => redisConnected;
+
 export const getRedisClient = () => {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
+    return null;
   }
   return redisClient;
 };
 
 export const setCache = async (key, value, expirationInSeconds = 3600) => {
+  if (!redisConnected) return;
   try {
     const client = getRedisClient();
+    if (!client) return;
     await client.setEx(key, expirationInSeconds, JSON.stringify(value));
   } catch (error) {
-    console.error('Redis Set Error:', error);
+    // Silently fail when Redis is unavailable
   }
 };
 
 export const getCache = async (key) => {
+  if (!redisConnected) return null;
   try {
     const client = getRedisClient();
+    if (!client) return null;
     const data = await client.get(key);
     return data ? JSON.parse(data) : null;
   } catch (error) {
-    console.error('Redis Get Error:', error);
     return null;
   }
 };
 
 export const deleteCache = async (key) => {
+  if (!redisConnected) return;
   try {
     const client = getRedisClient();
+    if (!client) return;
     await client.del(key);
   } catch (error) {
-    console.error('Redis Delete Error:', error);
+    // Silently fail when Redis is unavailable
   }
 };
 
 export const clearCache = async (pattern = '*') => {
+  if (!redisConnected) return;
   try {
     const client = getRedisClient();
+    if (!client) return;
     const keys = await client.keys(pattern);
     if (keys.length > 0) {
       await client.del(keys);
     }
   } catch (error) {
-    console.error('Redis Clear Error:', error);
+    // Silently fail when Redis is unavailable
   }
 };
 

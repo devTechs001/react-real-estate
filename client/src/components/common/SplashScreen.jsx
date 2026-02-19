@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const SplashScreen = () => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth(); // Get user and auth loading state
 
   useEffect(() => {
     // Minimum loading time to ensure proper animation display
@@ -24,7 +26,43 @@ const SplashScreen = () => {
           setTimeout(() => {
             try {
               setLoading(false);
-              navigate('/home');
+
+              // Determine where to navigate based on authentication status
+              if (authLoading) {
+                // If still loading auth state, wait a bit more
+                setTimeout(() => {
+                  if (user) {
+                    // User is authenticated, redirect based on role
+                    if (user.role === 'admin') {
+                      navigate('/admin');
+                    } else if (user.role === 'seller') {
+                      navigate('/seller');
+                    } else {
+                      // Regular user
+                      navigate('/dashboard');
+                    }
+                  } else {
+                    // User is not authenticated, go to home
+                    navigate('/home');
+                  }
+                }, 500);
+              } else {
+                // Auth state is loaded, redirect immediately
+                if (user) {
+                  // User is authenticated, redirect based on role
+                  if (user.role === 'admin') {
+                    navigate('/admin');
+                  } else if (user.role === 'seller') {
+                    navigate('/seller');
+                  } else {
+                    // Regular user
+                    navigate('/dashboard');
+                  }
+                } else {
+                  // User is not authenticated, go to home
+                  navigate('/home');
+                }
+              }
             } catch (err) {
               setError(err.message);
               // Fallback navigation if router fails
@@ -39,7 +77,7 @@ const SplashScreen = () => {
 
     // Cleanup function
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, [navigate, user, authLoading]);
 
   // Handle error state if needed
   if (error) {

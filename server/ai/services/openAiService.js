@@ -16,10 +16,31 @@ class OpenAIService {
       this.hasApiKey = true;
     }
 
-    this.redis = new Redis({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: process.env.REDIS_PORT || 6379,
-    });
+    // Initialize Redis with error handling
+    try {
+      this.redis = new Redis({
+        host: process.env.REDIS_HOST || 'localhost',
+        port: process.env.REDIS_PORT || 6379,
+        retryStrategy: (times) => {
+          if (times > 3) {
+            return null; // Stop retrying
+          }
+          return Math.min(times * 200, 2000);
+        },
+      });
+
+      this.redis.on('error', () => {
+        // Silently handle Redis errors - caching will be disabled
+      });
+
+      this.redis.on('connect', () => {
+        console.log('✅ Redis connected for AI caching');
+      });
+    } catch (error) {
+      console.warn('⚠️ Redis not available for AI caching');
+      this.redis = null;
+    }
+
     this.cacheExpiry = 3600; // 1 hour
   }
 
@@ -31,21 +52,22 @@ class OpenAIService {
 
   // Get cached response
   async getCached(key) {
+    if (!this.redis) return null;
     try {
       const cached = await this.redis.get(key);
       return cached ? JSON.parse(cached) : null;
     } catch (error) {
-      console.error('Cache retrieval error:', error);
       return null;
     }
   }
 
   // Set cached response
   async setCached(key, data, expiry = this.cacheExpiry) {
+    if (!this.redis) return;
     try {
       await this.redis.setex(key, expiry, JSON.stringify(data));
     } catch (error) {
-      console.error('Cache setting error:', error);
+      // Silently fail when Redis is unavailable
     }
   }
 

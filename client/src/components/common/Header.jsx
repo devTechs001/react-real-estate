@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaBars, FaTimes, FaUser, FaPlus, FaChartLine, FaCog, FaHeart, FaEnvelope, FaBell, FaSearch, FaCalendar } from 'react-icons/fa';
-import { useAuth } from '@/hooks/useAuth';
-import { usePermissions } from '@/hooks/usePermissions';
+import { useAuth } from '../../hooks/useAuth';
+import { usePermissions } from '../../hooks/usePermissions';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
@@ -311,54 +311,75 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden mt-4 overflow-hidden bg-white border-t border-gray-100"
+            className="md:hidden mt-4 overflow-hidden bg-gradient-to-b from-blue-50 to-white shadow-xl"
           >
-            <div className="container-custom py-4">
+            <div className="container-custom py-6">
               {/* Mobile Search */}
-              <form onSubmit={handleSearch} className="mb-4">
+              <form onSubmit={handleSearch} className="mb-6">
                 <div className="relative">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search properties..."
-                    className="w-full px-4 py-3 pl-10 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                    placeholder="Search properties, locations, or agents..."
+                    className="w-full px-4 py-3 pl-12 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 shadow-sm bg-white"
+                    autoFocus
                   />
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <FaTimes />
+                  </button>
                 </div>
               </form>
 
-              <div className="flex flex-col gap-4">
+              {/* Navigation Links */}
+              <div className="space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
                     onClick={() => setIsOpen(false)}
-                    className="text-gray-700 hover:text-primary-600 py-2"
+                    className="flex items-center justify-between w-full px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-primary-600 rounded-lg transition-all duration-200"
                   >
-                    {link.label}
+                    <span className="font-medium">{link.label}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 ))}
 
                 {isAuthenticated ? (
                   <>
-                    {/* User Info */}
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg">
-                      <p className="font-semibold text-gray-900">{user?.name}</p>
-                      <p className="text-sm text-gray-500">{user?.email}</p>
-                      <span className="inline-block mt-1 px-2 py-1 text-xs font-medium rounded-full bg-primary-100 text-primary-700">
-                        {user?.role === 'user' ? 'Client' : user?.role === 'agent' ? 'Agent' : 'Admin'}
-                      </span>
+                    {/* User Info Card */}
+                    <div className="px-4 py-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-lg">
+                          {user?.name?.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-bold text-gray-900">{user?.name}</p>
+                          <p className="text-sm text-gray-600 truncate max-w-[160px]">{user?.email}</p>
+                          <span className="inline-block mt-1 px-3 py-1 text-xs font-medium rounded-full bg-white text-primary-700 shadow-sm">
+                            {user?.role === 'user' ? 'Client' : user?.role === 'agent' ? 'Agent' : 'Admin'}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Dashboard */}
+                    {/* Dashboard Link */}
                     <Link
                       to={getDashboardPath()}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-2 text-gray-700 py-2 font-medium"
+                      className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-primary-600 rounded-lg transition-all duration-200"
                     >
-                      <FaChartLine className="text-primary-600" />
-                      Dashboard
+                      <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <FaChartLine className="text-blue-600" />
+                      </div>
+                      <span className="font-medium">Dashboard</span>
                     </Link>
 
                     {/* Role-specific links */}
@@ -367,10 +388,12 @@ const Header = () => {
                         key={link.to}
                         to={link.to}
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 text-gray-700 py-2"
+                        className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-primary-600 rounded-lg transition-all duration-200"
                       >
-                        {link.icon}
-                        {link.label}
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                          {link.icon}
+                        </div>
+                        <span className="font-medium">{link.label}</span>
                       </Link>
                     ))}
 
@@ -379,29 +402,33 @@ const Header = () => {
                       <Link
                         to="/add-property"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 btn btn-primary"
+                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 shadow-md"
                       >
                         <FaPlus /> Add Property
                       </Link>
                     )}
 
                     {/* Common links */}
-                    <div className="border-t border-gray-200 pt-2 mt-2">
+                    <div className="border-t border-gray-200 pt-3 mt-3">
                       <Link
                         to="/profile"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 text-gray-700 py-2"
+                        className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-primary-600 rounded-lg transition-all duration-200"
                       >
-                        <FaUser />
-                        Profile
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                          <FaUser />
+                        </div>
+                        <span className="font-medium">Profile</span>
                       </Link>
                       <Link
                         to="/settings"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 text-gray-700 py-2"
+                        className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-primary-600 rounded-lg transition-all duration-200"
                       >
-                        <FaCog />
-                        Settings
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                          <FaCog />
+                        </div>
+                        <span className="font-medium">Settings</span>
                       </Link>
                     </div>
 
@@ -411,28 +438,32 @@ const Header = () => {
                         handleLogout();
                         setIsOpen(false);
                       }}
-                      className="flex items-center gap-2 btn btn-secondary w-full mt-2"
+                      className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 mt-2"
                     >
-                      <FaTimes />
-                      Logout
+                      <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                        <FaTimes />
+                      </div>
+                      <span className="font-medium">Logout</span>
                     </button>
                   </>
                 ) : (
                   <>
-                    <Link
-                      to="/login"
-                      onClick={() => setIsOpen(false)}
-                      className="btn btn-secondary"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/register"
-                      onClick={() => setIsOpen(false)}
-                      className="btn btn-primary"
-                    >
-                      Register
-                    </Link>
+                    <div className="space-y-3">
+                      <Link
+                        to="/login"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-md"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/register"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 shadow-md"
+                      >
+                        Register
+                      </Link>
+                    </div>
                   </>
                 )}
               </div>

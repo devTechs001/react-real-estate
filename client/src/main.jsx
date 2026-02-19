@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
       <HelmetProvider>
-        <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+        <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
           <AuthProvider>
             <SocketProvider>
               <NotificationProvider>

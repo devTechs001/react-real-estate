@@ -1,26 +1,33 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
-const ProtectedRoute = ({ allowedRoles = [], children }) => {
-  const { user, loading } = useAuth();
+export const ProtectedRoute = ({ children, roles = [] }) => {
+  const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>; // You can replace this with a proper loader
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
-  // If no user is logged in, redirect to login
-  if (!user) {
+  if (!isAuthenticated) {
+    toast.error('Please login to access this page');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If allowed roles are specified, check if user's role is in the list
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    // Redirect to dashboard if user doesn't have required role
-    return <Navigate to="/dashboard" replace />;
+  // Check role permissions if roles are specified
+  if (roles.length > 0 && !roles.includes(user?.role)) {
+    toast.error('You do not have permission to access this page');
+    return <Navigate to="/" replace />;
   }
 
-  // User is authenticated and has required role (or no role restriction)
   return children;
 };
 

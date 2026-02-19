@@ -4,9 +4,18 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 import { dashboardService } from '../../services/dashboardService';
 import toast from 'react-hot-toast';
+import '../../styles/user/DashboardHome.css';
+
+// Helper function to extract first name from full name
+const getFirstName = (fullName) => {
+  if (!fullName) return '';
+  return fullName.split(' ')[0];
+};
 
 const DashboardHome = () => {
   const { user } = useAuth();
+  const firstName = getFirstName(user?.name);
+
   const [stats, setStats] = useState({
     savedProperties: 0,
     inquiries: 0,
@@ -115,7 +124,7 @@ const DashboardHome = () => {
         className="mb-8"
       >
         <h1 className="text-3xl font-bold text-gray-900">
-          Welcome back, {user?.firstName || 'User'}! 👋
+          Welcome back, {firstName || 'User'}! 👋
         </h1>
         <p className="text-gray-600 mt-1">
           Here's what's happening with your property search
@@ -255,10 +264,10 @@ const DashboardHome = () => {
           >
             <div className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
-                {user?.firstName?.[0] || 'U'}
+                {firstName?.[0] || 'U'}
               </div>
               <h3 className="font-semibold text-gray-900">
-                {user?.firstName} {user?.lastName}
+                {user?.name || 'User'}
               </h3>
               <p className="text-sm text-gray-500">{user?.email}</p>
               <Link

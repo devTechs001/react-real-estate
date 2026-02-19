@@ -9,12 +9,13 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
+  timeout: 10000, // 10 second timeout
 });
 
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,12 +30,24 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Handle timeout errors
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      console.error('Request timeout - server may be unavailable');
+      return Promise.reject({ message: 'Server is not responding. Please try again.' });
+    }
+
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error - server may be offline');
+      return Promise.reject({ message: 'Cannot connect to server. Please check your connection.' });
+    }
+
     const originalRequest = error.config;
 
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         // Try to refresh token
         const refreshToken = localStorage.getItem('refreshToken');
@@ -42,16 +55,16 @@ api.interceptors.response.use(
           const response = await axios.post(`${API_URL}/auth/refresh`, {
             refreshToken
           });
-          
+
           const { token } = response.data;
-          localStorage.setItem('token', token);
-          
+          localStorage.setItem('auth_token', token);
+
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return api(originalRequest);
         }
       } catch (refreshError) {
         // Refresh failed, clear tokens and redirect to login
-        localStorage.removeItem('token');
+        localStorage.removeItem('auth_token');
         localStorage.removeItem('refreshToken');
         window.location.href = '/login';
       }

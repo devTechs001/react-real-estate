@@ -4,14 +4,14 @@ export const handleApiError = (error) => {
   if (error.response) {
     // Server responded with error
     const { status, data } = error.response;
-    
+
     switch (status) {
       case 400:
         toast.error(data.message || 'Bad request');
         break;
       case 401:
         toast.error('Unauthorized. Please login again.');
-        localStorage.removeItem('token');
+        localStorage.removeItem('auth_token');
         window.location.href = '/login';
         break;
       case 403:
@@ -39,7 +39,7 @@ export const handleApiError = (error) => {
     // Something else happened
     toast.error(error.message || 'An unexpected error occurred');
   }
-  
+
   return error;
 };
 

@@ -4,10 +4,17 @@ import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
+// Helper function to extract first name from full name
+const getFirstName = (fullName) => {
+  if (!fullName) return '';
+  return fullName.split(' ')[0];
+};
+
 const DashboardLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const firstName = getFirstName(user?.name);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -231,12 +238,12 @@ const DashboardLayout = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
           <div className={`flex items-center ${sidebarOpen ? 'gap-3' : 'justify-center'}`}>
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-              {user?.firstName?.[0] || 'U'}
+              {firstName?.[0] || 'U'}
             </div>
             {sidebarOpen && (
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-900 truncate">
-                  {user?.firstName} {user?.lastName}
+                  {user?.name || 'User'}
                 </p>
                 <p className="text-sm text-gray-500 truncate">{user?.email}</p>
               </div>
@@ -413,7 +420,7 @@ const DashboardLayout = () => {
                   className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100"
                 >
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    {user?.firstName?.[0] || 'U'}
+                    {firstName?.[0] || 'U'}
                   </div>
                   <svg className="w-4 h-4 text-gray-600 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -430,7 +437,7 @@ const DashboardLayout = () => {
                       className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
                     >
                       <div className="p-4 border-b border-gray-100">
-                        <p className="font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
+                        <p className="font-medium text-gray-900">{user?.name || 'User'}</p>
                         <p className="text-sm text-gray-500">{user?.email}</p>
                       </div>
                       <div className="py-2">

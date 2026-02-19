@@ -3,8 +3,15 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
+// Helper function to extract first name from full name
+const getFirstName = (fullName) => {
+  if (!fullName) return '';
+  return fullName.split(' ')[0];
+};
+
 const SellerOverview = () => {
   const { user } = useAuth();
+  const firstName = getFirstName(user?.name);
   const [stats, setStats] = useState({
     totalProperties: 15,
     activeListings: 12,
@@ -49,7 +56,7 @@ const SellerOverview = () => {
         className="mb-8"
       >
         <h1 className="text-3xl font-bold text-gray-900">
-          Hello, {user?.firstName || 'Seller'}! 👋
+          Hello, {firstName || 'Seller'}! 👋
         </h1>
         <p className="text-gray-600 mt-1">
           Here's your property management dashboard
@@ -192,10 +199,10 @@ const SellerOverview = () => {
           >
             <div className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
-                {user?.firstName?.[0] || 'S'}
+                {firstName?.[0] || 'S'}
               </div>
               <h3 className="font-semibold text-gray-900">
-                {user?.firstName} {user?.lastName}
+                {user?.name || 'Seller'}
               </h3>
               <p className="text-sm text-gray-500">{user?.email}</p>
               <Link

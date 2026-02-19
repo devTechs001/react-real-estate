@@ -5,13 +5,24 @@ import SEO from '../../components/common/SEO';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 
+// Helper function to split full name into first and last name
+const splitName = (fullName) => {
+  if (!fullName) return { firstName: '', lastName: '' };
+  const parts = fullName.split(' ');
+  return {
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' ') || ''
+  };
+};
+
 const Profile = () => {
   const { user } = useAuth();
   const fileInputRef = useRef(null);
+  const { firstName, lastName } = splitName(user?.name);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || 'John',
-    lastName: user?.lastName || 'Doe',
+    firstName: firstName || 'John',
+    lastName: lastName || 'Doe',
     email: user?.email || 'john@example.com',
     phone: '+1 (555) 123-4567',
     bio: 'Looking for my dream home in the Miami area. Love modern architecture and waterfront properties.',

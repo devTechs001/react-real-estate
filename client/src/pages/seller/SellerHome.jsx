@@ -3,12 +3,18 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from '../../components/common/Header';
-import Footer from '../../components/common/Footer';
 import SEO from '../../components/common/SEO';
 import { useAuth } from '../../hooks/useAuth';
 
+// Helper function to extract first name from full name
+const getFirstName = (fullName) => {
+  if (!fullName) return '';
+  return fullName.split(' ')[0];
+};
+
 const SellerHome = () => {
   const { user } = useAuth();
+  const firstName = getFirstName(user?.name);
   const [stats, setStats] = useState({
     totalProperties: 12,
     activeListings: 8,
@@ -70,7 +76,7 @@ const SellerHome = () => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Welcome back, {user?.firstName || 'Seller'}! 👋
+                  Welcome back, {firstName || 'Seller'}! 👋
                 </h1>
                 <p className="text-gray-600 mt-1">
                   Here's an overview of your property listings
@@ -274,8 +280,6 @@ const SellerHome = () => {
             </div>
           </div>
         </div>
-
-        <Footer />
       </div>
     </>
   );

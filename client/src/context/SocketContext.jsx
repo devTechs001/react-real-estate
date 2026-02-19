@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const socketInstance = socketService.connect(token);
       setSocket(socketInstance);
 

@@ -4,10 +4,17 @@ import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
+// Helper function to extract first name from full name
+const getFirstName = (fullName) => {
+  if (!fullName) return '';
+  return fullName.split(' ')[0];
+};
+
 const SellerLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const firstName = getFirstName(user?.name);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -255,12 +262,12 @@ const SellerLayout = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
           <div className={`flex items-center ${sidebarOpen ? 'gap-3' : 'justify-center'}`}>
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-              {user?.firstName?.[0] || 'S'}
+              {firstName?.[0] || 'S'}
             </div>
             {sidebarOpen && (
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-900 truncate">
-                  {user?.firstName} {user?.lastName}
+                  {user?.name || 'Seller'}
                 </p>
                 <p className="text-sm text-gray-500 truncate">Seller Account</p>
               </div>
@@ -385,7 +392,7 @@ const SellerLayout = () => {
               {/* Profile */}
               <Link to="/profile" className="flex items-center gap-2">
                 <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                  {user?.firstName?.[0] || 'S'}
+                  {firstName?.[0] || 'S'}
                 </div>
               </Link>
             </div>

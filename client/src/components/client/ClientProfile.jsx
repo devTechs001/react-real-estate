@@ -7,13 +7,24 @@ import SEO from '../../components/common/SEO';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 
+// Helper function to split full name into first and last name
+const splitName = (fullName) => {
+  if (!fullName) return { firstName: '', lastName: '' };
+  const parts = fullName.split(' ');
+  return {
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' ') || ''
+  };
+};
+
 const Profile = () => {
   const { user, updateProfile } = useAuth();
   const fileInputRef = useRef(null);
+  const { firstName, lastName } = splitName(user?.name);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
+    firstName: firstName,
+    lastName: lastName,
     email: user?.email || '',
     phone: user?.phone || '',
     bio: user?.bio || '',

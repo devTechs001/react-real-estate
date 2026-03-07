@@ -1,6 +1,6 @@
 // client/src/pages/user/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
@@ -16,7 +16,7 @@ const getFirstName = (fullName) => {
 };
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
   const firstName = getFirstName(user?.name);
   const [stats, setStats] = useState({
     savedProperties: 0,
@@ -26,13 +26,17 @@ const Dashboard = () => {
   });
   const [recentActivity, setRecentActivity] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (isAuthenticated && user) {
+      fetchDashboardData();
+    }
+  }, [isAuthenticated, user]);
 
   const fetchDashboardData = async () => {
     try {
+      setDataLoading(true);
       // Try to get dashboard data from the new endpoint first
       const dashboardData = await dashboardService.getDashboardData();
       if (dashboardData.role === 'user') {
@@ -46,7 +50,7 @@ const Dashboard = () => {
             price: prop.price,
             location: prop.location,
             image: prop.images?.[0] || 'https://via.placeholder.com/400x300',
-            match: 85 // Default match percentage
+            match: 85
           })));
         }
 
@@ -59,9 +63,13 @@ const Dashboard = () => {
           })));
         }
       }
+      toast.success('Dashboard loaded successfully');
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      toast.error('Failed to load dashboard data');
+      // Don't show error toast for auth errors (redirect will handle it)
+      if (error.response?.status !== 401) {
+        toast.error('Failed to load dashboard data, showing sample data');
+      }
 
       // Fallback to default values
       setRecentActivity([
@@ -97,6 +105,8 @@ const Dashboard = () => {
           match: 88
         },
       ]);
+    } finally {
+      setDataLoading(false);
     }
   };
 
@@ -116,6 +126,21 @@ const Dashboard = () => {
       default: return '📋';
     }
   };
+
+  // Show loading state
+  if (loading || dataLoading) {
+    return (
+      <>
+        <SEO title="Dashboard - HomeScape" description="Your personal dashboard" />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

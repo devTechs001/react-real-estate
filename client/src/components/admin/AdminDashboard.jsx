@@ -68,11 +68,45 @@ const AdminDashboard = () => {
   const fetchDashboardStats = async () => {
     try {
       const dashboardData = await dashboardService.getDashboardData();
-      setStats(dashboardData.stats);
+      console.log('Dashboard data received:', dashboardData);
+      setStats(dashboardData.stats || {});
       setLastUpdated(new Date());
+      toast.success('Dashboard loaded successfully');
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
-      toast.error('Failed to load dashboard');
+      toast.error('Failed to load dashboard, using sample data');
+
+      // Fallback sample data
+      setStats({
+        totalUsers: 1250,
+        totalProperties: 485,
+        pendingProperties: 12,
+        totalInquiries: 89,
+        totalRevenue: 125000,
+        userGrowth: [
+          { month: 'Jan', count: 45 },
+          { month: 'Feb', count: 52 },
+          { month: 'Mar', count: 61 },
+          { month: 'Apr', count: 58 },
+          { month: 'May', count: 67 },
+          { month: 'Jun', count: 73 },
+        ],
+        propertyByType: [
+          { type: 'House', count: 180 },
+          { type: 'Apartment', count: 145 },
+          { type: 'Condo', count: 95 },
+          { type: 'Villa', count: 45 },
+          { type: 'Land', count: 20 },
+        ],
+        recentUsers: [
+          { _id: '1', name: 'John Doe', email: 'john@example.com', createdAt: new Date() },
+          { _id: '2', name: 'Jane Smith', email: 'jane@example.com', createdAt: new Date() },
+        ],
+        recentProperties: [
+          { _id: '1', title: 'Luxury Villa', location: 'Miami, FL', price: 1250000, images: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400'] },
+          { _id: '2', title: 'Modern Apartment', location: 'New York, NY', price: 850000, images: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400'] },
+        ],
+      });
     } finally {
       setLoading(false);
     }

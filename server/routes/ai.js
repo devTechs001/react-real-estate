@@ -1,10 +1,29 @@
 import express from 'express';
 import { aiController } from '../controllers/aiController.js';
-import { protect } from '../middleware/auth.js';
+import { protect, authorize } from '../middleware/auth.js';
 import { aiRateLimit } from '../middleware/aiRateLimit.js';
 import { body, query, param } from 'express-validator';
 
 const router = express.Router();
+
+// AI Chat Route
+router.post(
+  '/chat',
+  protect,
+  aiRateLimit,
+  [body('message').isString().notEmpty()],
+  aiController.chat
+);
+
+// Model Training (Admin only)
+router.post(
+  '/train-model',
+  protect,
+  authorize('admin'),
+  aiRateLimit,
+  [body('modelType').isString().optional()],
+  aiController.trainModel
+);
 
 // Price Prediction Routes
 router.post(

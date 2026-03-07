@@ -4,10 +4,18 @@
 - **Commit**: ✅ Changes committed successfully
 - **Tailwind CSS**: ✅ Configured (stable version with PostCSS & Autoprefixer)
 - **Admin Components**: ✅ All 7 components populated with full implementations
+- **Health Endpoints**: ✅ Added (4 new endpoints)
+- **AI Chat & Train**: ✅ Added (2 new endpoints)
 
 ---
 
 ## 🔌 API ENDPOINTS
+
+### **Health Routes** (`/api/health`)
+- `GET /` - Basic health check
+- `GET /detailed` - Detailed health check with system info
+- `GET /ready` - Readiness probe (K8s compatible)
+- `GET /live` - Liveness probe (K8s compatible)
 
 ### **Authentication Routes** (`/api/auth`)
 - `POST /register` - Register new user
@@ -31,15 +39,25 @@
 - `DELETE /:id` - Delete review (Protected)
 
 ### **AI Routes** (`/api/ai`)
-- `POST /chat` - Chat with AI (Rate limited)
+- `POST /chat` - Chat with AI (Rate limited, Protected)
+- `POST /train-model` - Train ML model (Admin only, Rate limited)
 - `POST /predict-price` - Predict property price (Rate limited)
-- `POST /enhance-search` - Enhance search (Rate limited)
 - `POST /market-insights` - Get market insights (Rate limited)
 - `GET /recommendations` - Get recommendations (Protected)
 - `POST /analyze-image` - Analyze property image (Protected)
 - `POST /generate-description` - Generate description (Protected)
-- `POST /fraud-detection` - Detect fraud (Admin only)
-- `POST /train-model` - Train model (Admin only)
+- `POST /check-fraud` - Detect fraud (Admin only, Rate limited)
+- `GET /market-trends` - Get market trends (Protected)
+- `GET /similar-properties/:propertyId` - Get similar properties (Protected)
+- `GET /trending-properties` - Get trending properties
+- `GET /risk-profile/:userId` - Get user risk profile (Protected)
+- `POST /enhance-image` - Enhance image (Protected, Rate limited)
+- `POST /answer-question` - Answer property question (Protected, Rate limited)
+- `POST /extract-keywords` - Extract keywords (Protected)
+- `POST /compare-properties` - Compare properties (Protected, Rate limited)
+- `GET /analyze-neighborhood` - Analyze neighborhood (Protected)
+- `GET /analyze-investment/:propertyId` - Analyze investment (Protected, Rate limited)
+- `GET /analyze-reviews/:propertyId` - Analyze review sentiment (Protected)
 
 ### **Messages Routes** (`/api/messages`)
 - `GET /conversations` - Get conversations (Protected)

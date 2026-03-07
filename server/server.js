@@ -29,6 +29,7 @@ import paymentRoutes from './routes/payments.js';
 import uploadRoutes from './routes/upload.js';
 import referralRoutes from './routes/referrals.js';
 import dashboardRoutes from './routes/dashboard.js';
+import healthRoutes from './routes/health.js';
 
 dotenv.config();
 
@@ -124,6 +125,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/referrals', referralRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/health', healthRoutes);
 
 // Error Handler
 app.use(errorHandler);

@@ -1,5 +1,10 @@
 # Netlify Configuration for Real Estate Application
 # https://docs.netlify.com/configure-builds/file-based-configuration/
+# Last Updated: March 7, 2026
+
+# =============================================================================
+# BUILD CONFIGURATION
+# =============================================================================
 
 [build]
   # Build command
@@ -14,17 +19,32 @@
   NODE_VERSION = "18"
   PNPM_VERSION = "8.6.0"
 
-# Redirects for single-page application
+# =============================================================================
+# REDIRECTS & REWRITES
+# =============================================================================
+
+# SPA fallback redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Custom headers
+# API proxy redirects (when using Netlify Functions)
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# =============================================================================
+# SECURITY HEADERS
+# =============================================================================
+
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/"
@@ -33,18 +53,165 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-# Development settings
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css"
+    X-Content-Type-Options = "nosniff"
+
+# =============================================================================
+# DEVELOPMENT SETTINGS
+# =============================================================================
+
 [dev]
   command = "pnpm run dev"
   port = 5173
+  autoLaunch = false
+  framework = "#custom"
 
-# Context-specific settings
+# =============================================================================
+# CONTEXT-SPECIFIC SETTINGS
+# =============================================================================
+
 [context.production]
   command = "pnpm run build"
+  publish = "client/dist"
+
+[context.production.environment]
+  VITE_API_URL = "https://api.yourdomain.com"
 
 [context.deploy-preview]
   command = "pnpm run build"
+  publish = "client/dist"
+
+[context.deploy-preview.environment]
+  VITE_API_URL = "https://staging-api.yourdomain.com"
 
 [context.branch-deploy]
   command = "pnpm run build"
+  publish = "client/dist"
+
+[context.branch-deploy.environment]
+  VITE_API_URL = "https://dev-api.yourdomain.com"
+
+# =============================================================================
+# PLUGINS
+# =============================================================================
+
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+[[plugins]]
+  package = "@netlify/plugin-image-optim"
+
+# =============================================================================
+# API ENDPOINTS REFERENCE
+# Full documentation: API_ENDPOINTS.md
+# Backend deployed separately on Render
+# =============================================================================
+#
+# AUTHENTICATION: /api/auth (13 endpoints)
+#   POST /register, /login, /logout, /forgot-password, /reset-password/:token
+#   POST /verify-email/:token, /resend-verification
+#   PUT /update-password, /profile
+#   GET /me, /roles, /roles/:role/permissions
+#   PUT /users/:userId/role
+#
+# PROPERTIES: /api/properties (7 endpoints)
+#   GET /, /user/my-properties, /featured, /:id
+#   POST /
+#   PUT /:id
+#   DELETE /:id
+#
+# ADMIN: /api/admin (16 endpoints)
+#   GET /dashboard-stats, /users, /properties, /system, /logs
+#   GET /emails, /settings, /financial-analytics, /seller-performance
+#   PUT /users/:id/role, /users/:id/status, /properties/:id/approve
+#   PUT /properties/:id/reject, /settings
+#   DELETE /users/:id, /properties/:id
+#
+# AI: /api/ai (17 endpoints)
+#   POST /predict-price, /check-fraud, /analyze-image, /enhance-image
+#   POST /generate-description, /answer-question, /extract-keywords
+#   POST /compare-properties
+#   GET /market-trends, /recommendations, /similar-properties/:id
+#   GET /trending-properties, /risk-profile/:userId, /market-insights
+#   GET /analyze-neighborhood, /analyze-investment/:id, /analyze-reviews/:id
+#
+# MESSAGES: /api/messages (5 endpoints)
+#   GET /conversations, /:conversationId
+#   POST /
+#   PUT /:conversationId/read
+#   DELETE /:conversationId
+#
+# INQUIRIES: /api/inquiries (5 endpoints)
+#   POST /
+#   GET /my-inquiries, /received
+#   PUT /:id/respond, /:id/status
+#
+# APPOINTMENTS: /api/appointments (5 endpoints)
+#   POST /
+#   GET /my-appointments, /received
+#   PUT /:id/status, /:id/cancel
+#
+# FAVORITES: /api/favorites (5 endpoints)
+#   GET /, /check/:propertyId
+#   POST /
+#   PUT /:id
+#   DELETE /:propertyId
+#
+# NOTIFICATIONS: /api/notifications (5 endpoints)
+#   GET /, /unread-count
+#   PUT /:id/read, /mark-all-read
+#   DELETE /:id
+#
+# SAVED SEARCHES: /api/saved-searches (6 endpoints)
+#   GET /, /:id/matches
+#   POST /
+#   PUT /:id
+#   DELETE /:id
+#
+# PAYMENTS: /api/payments (5 endpoints)
+#   POST /webhook, /create-subscription, /cancel-subscription
+#   GET /subscription, /history
+#
+# ANALYTICS: /api/analytics (2 endpoints)
+#   GET /seller
+#   POST /track-view/:propertyId
+#
+# USERS: /api/users (6 endpoints)
+#   GET /profile/:id, /:id/properties, /dashboard-stats
+#   PUT /preferences
+#   POST /:id/follow
+#   DELETE /:id/follow
+#
+# REVIEWS: /api/reviews (5 endpoints)
+#   GET /property/:propertyId, /user/my-reviews
+#   POST /
+#   PUT /:id
+#   DELETE /:id
+#
+# REFERRALS: /api/referrals (7 endpoints)
+#   GET /:code, /, /analytics/stats
+#   POST /property, /seller
+#   PUT /:id
+#   DELETE /:id
+#
+# UPLOAD: /api/upload (3 endpoints)
+#   POST /image, /images
+#   DELETE /image/:publicId
+#
+# DASHBOARD: /api/dashboard (2 endpoints)
+#   GET /, /stats
+#
+# TOTAL: 80+ API endpoints across 17 route modules
+# =============================================================================

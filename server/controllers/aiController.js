@@ -5,9 +5,75 @@ import imageAnalysisService from '../ai/services/imageAnalysisService.js';
 import nlpService from '../ai/services/nlpService.js';
 import openAiService from '../ai/services/openAiService.js';
 import sentimentAnalysisService from '../ai/services/sentimentAnalysis.js';
+import tensorFlowService from '../ai/services/tensorFlowService.js';
 import { validationResult } from 'express-validator';
+import Property from '../models/Property.js';
+import Review from '../models/Review.js';
 
 export const aiController = {
+  // AI Chat
+  async chat(req, res) {
+    try {
+      const { message, conversationHistory = [] } = req.body;
+      const userId = req.user.id;
+
+      if (!message || message.trim() === '') {
+        return res.status(400).json({
+          success: false,
+          error: 'Message is required'
+        });
+      }
+
+      const response = await openAiService.chat(message, conversationHistory, userId);
+
+      res.json({
+        success: true,
+        response
+      });
+    } catch (error) {
+      console.error('AI Chat error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  },
+
+  // Train Model (Admin only)
+  async trainModel(req, res) {
+    try {
+      const { modelType = 'price_prediction', trainingData } = req.body;
+
+      let result;
+
+      switch (modelType) {
+        case 'price_prediction':
+          result = await tensorFlowService.trainPricePredictionModel();
+          break;
+        case 'fraud_detection':
+          result = await fraudDetectionService.trainModel(trainingData);
+          break;
+        default:
+          return res.status(400).json({
+            success: false,
+            error: 'Invalid model type. Supported: price_prediction, fraud_detection'
+          });
+      }
+
+      res.json({
+        success: true,
+        message: 'Model training completed successfully',
+        result
+      });
+    } catch (error) {
+      console.error('Model training error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  },
+
   // Price Prediction
   async predictPrice(req, res) {
     try {

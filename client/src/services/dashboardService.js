@@ -55,4 +55,37 @@ export const dashboardService = {
     const response = await api.get(url);
     return response.data;
   },
+
+  // Real-time stats (placeholder - would need WebSocket implementation)
+  getRealTimeStats: async () => {
+    try {
+      const response = await api.get('/admin/realtime-stats');
+      return response.data;
+    } catch (error) {
+      // Return default values if endpoint doesn't exist
+      return {
+        activeUsers: 0,
+        newPropertiesToday: 0,
+        revenueToday: 0,
+      };
+    }
+  },
+
+  // Admin notifications (placeholder)
+  getAdminNotifications: async () => {
+    try {
+      const response = await api.get('/admin/notifications');
+      return response.data;
+    } catch (error) {
+      return { notifications: [] };
+    }
+  },
+
+  // Export data
+  exportData: async (type) => {
+    const response = await api.get(`/admin/export/${type}`, {
+      responseType: 'blob',
+    });
+    return response.data;
+  },
 };

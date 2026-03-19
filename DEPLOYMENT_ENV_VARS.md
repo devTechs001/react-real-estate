@@ -167,15 +167,15 @@ Add these in **Render Dashboard** → Web Service → Environment:
 ### Step 1: Create Web Service
 1. Go to [Render Dashboard](https://dashboard.render.com)
 2. Click **New +** → **Web Service**
-3. Connect your GitHub repository: `https://github.com/devTechs001/virtual-touer`
+3. Connect your GitHub repository: `https://github.com/devTechs001/react-real-estate`
 4. Configure:
    - **Name**: `virtual-tour-server`
    - **Region**: Choose closest to your users
    - **Branch**: `main`
-   - **Root Directory**: Leave blank (root)
+   - **Root Directory**: `server`
    - **Runtime**: `Node`
-   - **Build Command**: `cd client && npm install && npm run build`
-   - **Start Command**: `cd server && npm install && node server.js`
+   - **Build Command**: `cd server && npm install`
+   - **Start Command**: `cd server && node server.js`
    - **Instance Type**: Free or $7/month (always-on)
 
 ### Step 2: Add Environment Variables

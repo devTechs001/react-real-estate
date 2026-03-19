@@ -1,71 +1,21 @@
-# Render Deployment Configuration for Real Estate Application
+# Render Deployment Configuration - Server Only
 # https://render.com/docs
-# Last Updated: March 7, 2026
-
-# =============================================================================
-# FRONTEND SERVICES
-# =============================================================================
+# Last Updated: March 19, 2026
 
 services:
-  # -------------------------------------------------------------------------
-  # Client (Frontend) - Static Site
-  # -------------------------------------------------------------------------
-  - type: web
-    name: real-estate-client
-    env: static
-    plan: starter
-    region: oregon
-    branch: main
-    buildCommand: "cd client && pnpm install && pnpm run build"
-    staticPublishPath: client/dist
-    headers:
-      - path: "/*"
-        name: "X-Frame-Options"
-        value: "SAMEORIGIN"
-      - path: "/*"
-        name: "X-Content-Type-Options"
-        value: "nosniff"
-      - path: "/*"
-        name: "X-XSS-Protection"
-        value: "1; mode=block"
-      - path: "/assets/*"
-        name: "Cache-Control"
-        value: "public, max-age=31536000, immutable"
-      - path: "/"
-        name: "Cache-Control"
-        value: "public, max-age=0, must-revalidate"
-    routes:
-      - path: "/*"
-        destination: "/index.html"
-        matchType: "prefix"
-    envVars:
-      - key: NODE_VERSION
-        value: 18
-      - key: VITE_API_URL
-        fromService:
-          name: real-estate-server
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
-      - key: VITE_GOOGLE_MAPS_API_KEY
-        sync: false
-      - key: VITE_STRIPE_PUBLIC_KEY
-        sync: false
-
   # -------------------------------------------------------------------------
   # Server (Backend) - Web Service
   # -------------------------------------------------------------------------
   - type: web
-    name: real-estate-server
+    name: virtual-tour-server
     env: node
-    plan: standard
     region: oregon
     runtime: node-18
     rootDir: server
     branch: main
-    buildCommand: "pnpm install && pnpm run build"
-    startCommand: "pnpm start"
+    buildCommand: "npm install"
+    startCommand: "node server.js"
     autoDeploy: true
-    branched: true
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
@@ -74,13 +24,15 @@ services:
         value: 10000
       - key: NODE_VERSION
         value: 18.0.0
+      - key: FRONTEND_URL
+        value: https://virtual-touer.netlify.app
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRE
         value: 30d
-      - key: CLOUDINARY_NAME
+      - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
         sync: false
@@ -88,260 +40,45 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4-turbo-preview
+      - key: OPENAI_VISION_MODEL
+        value: gpt-4-vision-preview
       - key: REDIS_URL
         sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
-      - key: FRONTEND_URL
-        fromService:
-          name: real-estate-client
-          type: static
-          envVarKey: DEPLOY_URL
-      - key: CORS_ORIGIN
-        fromService:
-          name: real-estate-client
-          type: static
-          envVarKey: DEPLOY_URL
+      - key: STRIPE_PRO_PRICE_ID
+        sync: false
+      - key: STRIPE_PREMIUM_PRICE_ID
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: GOOGLE_CLOUD_PROJECT_ID
+        sync: false
+      - key: GOOGLE_CLOUD_CREDENTIALS
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: MAX_FILE_SIZE
+        value: 5242880
+      - key: UPLOAD_PATH
+        value: ./uploads
     disk:
       name: uploads
       mountPath: /opt/render/project/server/uploads
       sizeGB: 5
-
-  # -------------------------------------------------------------------------
-  # Redis (Cache & Sessions) - Redis Service
-  # -------------------------------------------------------------------------
-  - type: redis
-    name: real-estate-redis
-    plan: starter
-    region: oregon
-    maxmemoryPolicy: allkeys-lru
-
-  # -------------------------------------------------------------------------
-  # Database - PostgreSQL Service (Alternative to MongoDB)
-  # -------------------------------------------------------------------------
-  - type: pserv
-    name: real-estate-db
-    plan: starter
-    region: oregon
-    databaseName: real_estate_db
-    ipAllowList: []
-
-# =============================================================================
-# ENVIRONMENT VARIABLES (Global)
-# =============================================================================
-
-envVars:
-  # Application
-  - key: NODE_ENV
-    value: production
-  - key: APP_NAME
-    value: Real Estate Platform
-
-  # API Configuration
-  - key: API_VERSION
-    value: v1
-  - key: API_RATE_LIMIT_WINDOW_MS
-    value: 900000
-  - key: API_RATE_LIMIT_MAX_REQUESTS
-    value: 100
-
-  # AI Configuration
-  - key: AI_RATE_LIMIT_WINDOW_MS
-    value: 60000
-  - key: AI_RATE_LIMIT_MAX_REQUESTS
-    value: 10
-
-  # Frontend
-  - key: VITE_API_URL
-    fromService:
-      name: real-estate-server
-      type: web
-      envVarKey: RENDER_EXTERNAL_URL
-
-  # Secrets (sync: false = set manually in Render dashboard)
-  - key: MONGODB_URI
-    sync: false
-  - key: JWT_SECRET
-    sync: false
-  - key: CLOUDINARY_NAME
-    sync: false
-  - key: CLOUDINARY_API_KEY
-    sync: false
-  - key: CLOUDINARY_API_SECRET
-    sync: false
-  - key: OPENAI_API_KEY
-    sync: false
-  - key: REDIS_URL
-    sync: false
-  - key: STRIPE_SECRET_KEY
-    sync: false
-  - key: STRIPE_WEBHOOK_SECRET
-    sync: false
-  - key: VITE_GOOGLE_MAPS_API_KEY
-    sync: false
-  - key: VITE_STRIPE_PUBLIC_KEY
-    sync: false
-
-# =============================================================================
-# PRE/POST DEPLOY COMMANDS
-# =============================================================================
-
-preDeployCommand: "cd server && pnpm run type-check"
-
-postDeployCommand: "cd server && pnpm run seed:production"
-
-# =============================================================================
-# API ENDPOINTS DOCUMENTATION
-# Reference: API_ENDPOINTS.md
-# =============================================================================
-#
-# AUTHENTICATION: /api/auth
-#   POST   /register                    - Register new user
-#   POST   /login                       - User login
-#   POST   /logout                      - User logout (Protected)
-#   POST   /forgot-password             - Request password reset
-#   POST   /reset-password/:token       - Reset password
-#   PUT    /update-password             - Update password (Protected)
-#   POST   /verify-email/:token         - Verify email
-#   POST   /resend-verification         - Resend verification email
-#   GET    /me                          - Get current user (Protected)
-#   PUT    /profile                     - Update profile (Protected)
-#   GET    /roles                       - Get all roles (Admin)
-#   GET    /roles/:role/permissions     - Get role permissions (Admin)
-#   PUT    /users/:userId/role          - Update user role (Admin)
-#
-# PROPERTIES: /api/properties
-#   GET    /                            - Get all properties
-#   POST   /                            - Create property (Protected)
-#   GET    /user/my-properties          - Get user's properties (Protected)
-#   GET    /featured                    - Get featured properties
-#   GET    /:id                         - Get property details
-#   PUT    /:id                         - Update property (Protected)
-#   DELETE /:id                         - Delete property (Protected)
-#
-# ADMIN: /api/admin
-#   GET    /dashboard-stats             - Dashboard statistics (Admin)
-#   GET    /users                       - Get all users (Admin)
-#   PUT    /users/:id/role              - Update user role (Admin)
-#   PUT    /users/:id/status            - Update user status (Admin)
-#   DELETE /users/:id                   - Delete user (Admin)
-#   GET    /properties                  - Get properties (Admin)
-#   PUT    /properties/:id/approve      - Approve property (Admin)
-#   PUT    /properties/:id/reject       - Reject property (Admin)
-#   DELETE /properties/:id              - Delete property (Admin)
-#   GET    /system                      - Get system health (Admin)
-#   GET    /logs                        - Get system logs (Admin)
-#   GET    /emails                      - Get email templates (Admin)
-#   GET    /settings                    - Get system settings (Admin)
-#   PUT    /settings                    - Update system settings (Admin)
-#   GET    /financial-analytics         - Get financial analytics (Admin)
-#   GET    /seller-performance          - Get seller performance (Admin)
-#
-# AI: /api/ai
-#   POST   /predict-price               - Predict property price (Protected, Rate Limited)
-#   GET    /market-trends               - Get market trends (Protected)
-#   GET    /recommendations             - Get recommendations (Protected)
-#   GET    /similar-properties/:id      - Get similar properties (Protected)
-#   GET    /trending-properties         - Get trending properties
-#   POST   /check-fraud                 - Check fraud (Protected, Rate Limited)
-#   GET    /risk-profile/:userId        - Get user risk profile (Protected)
-#   POST   /analyze-image               - Analyze property image (Protected, Rate Limited)
-#   POST   /enhance-image               - Enhance image (Protected, Rate Limited)
-#   POST   /generate-description        - Generate description (Protected, Rate Limited)
-#   POST   /answer-question             - Answer question (Protected, Rate Limited)
-#   POST   /extract-keywords            - Extract keywords (Protected)
-#   GET    /market-insights             - Get market insights (Protected)
-#   POST   /compare-properties          - Compare properties (Protected, Rate Limited)
-#   GET    /analyze-neighborhood        - Analyze neighborhood (Protected)
-#   GET    /analyze-investment/:id      - Analyze investment (Protected, Rate Limited)
-#   GET    /analyze-reviews/:id         - Analyze reviews (Protected)
-#
-# MESSAGES: /api/messages
-#   GET    /conversations               - Get conversations (Protected)
-#   GET    /:conversationId             - Get messages (Protected)
-#   POST   /                            - Send message (Protected)
-#   PUT    /:conversationId/read        - Mark as read (Protected)
-#   DELETE /:conversationId             - Delete conversation (Protected)
-#
-# INQUIRIES: /api/inquiries
-#   POST   /                            - Create inquiry (Protected)
-#   GET    /my-inquiries                - Get user's inquiries (Protected)
-#   GET    /received                    - Get received inquiries (Protected)
-#   PUT    /:id/respond                 - Respond to inquiry (Protected)
-#   PUT    /:id/status                  - Update inquiry status (Protected)
-#
-# APPOINTMENTS: /api/appointments
-#   POST   /                            - Request appointment (Protected)
-#   GET    /my-appointments             - Get my appointments (Protected)
-#   GET    /received                    - Get received appointments (Protected)
-#   PUT    /:id/status                  - Update status (Protected)
-#   PUT    /:id/cancel                  - Cancel appointment (Protected)
-#
-# FAVORITES: /api/favorites
-#   GET    /                            - Get favorites (Protected)
-#   POST   /                            - Add favorite (Protected)
-#   GET    /check/:propertyId           - Check if favorite (Protected)
-#   PUT    /:id                         - Update favorite (Protected)
-#   DELETE /:propertyId                 - Remove favorite (Protected)
-#
-# NOTIFICATIONS: /api/notifications
-#   GET    /                            - Get notifications (Protected)
-#   GET    /unread-count                - Get unread count (Protected)
-#   PUT    /:id/read                    - Mark as read (Protected)
-#   PUT    /mark-all-read               - Mark all as read (Protected)
-#   DELETE /:id                         - Delete notification (Protected)
-#
-# SAVED SEARCHES: /api/saved-searches
-#   GET    /                            - Get saved searches (Protected)
-#   POST   /                            - Create saved search (Protected)
-#   PUT    /:id                         - Update search (Protected)
-#   DELETE /:id                         - Delete search (Protected)
-#   GET    /:id/matches                 - Get matching properties (Protected)
-#
-# PAYMENTS: /api/payments
-#   POST   /webhook                     - Stripe webhook
-#   POST   /create-subscription         - Create subscription (Protected)
-#   POST   /cancel-subscription         - Cancel subscription (Protected)
-#   GET    /subscription                - Get subscription (Protected)
-#   GET    /history                     - Get payment history (Protected)
-#
-# ANALYTICS: /api/analytics
-#   GET    /seller                      - Get seller analytics (Protected)
-#   POST   /track-view/:propertyId      - Track property view
-#
-# USERS: /api/users
-#   GET    /profile/:id                 - Get user profile
-#   GET    /:id/properties              - Get user properties
-#   PUT    /preferences                 - Update preferences (Protected)
-#   GET    /dashboard-stats             - Get dashboard stats (Protected)
-#   POST   /:id/follow                  - Follow user (Protected)
-#   DELETE /:id/follow                  - Unfollow user (Protected)
-#
-# REVIEWS: /api/reviews
-#   GET    /property/:propertyId        - Get property reviews
-#   GET    /user/my-reviews             - Get user's reviews (Protected)
-#   POST   /                            - Create review (Protected)
-#   PUT    /:id                         - Update review (Protected)
-#   DELETE /:id                         - Delete review (Protected)
-#
-# REFERRALS: /api/referrals
-#   GET    /:code                       - Get referral by code
-#   POST   /property                    - Create property link (Protected)
-#   POST   /seller                      - Create seller link (Protected)
-#   GET    /                            - Get my referrals (Protected)
-#   PUT    /:id                         - Update referral (Protected)
-#   DELETE /:id                         - Delete referral (Protected)
-#   GET    /analytics/stats             - Get referral analytics (Protected)
-#
-# UPLOAD: /api/upload
-#   POST   /image                       - Upload single image (Protected)
-#   POST   /images                      - Upload multiple images (Protected)
-#   DELETE /image/:publicId             - Delete image (Protected)
-#
-# DASHBOARD: /api/dashboard
-#   GET    /                            - Get dashboard data (Protected)
-#   GET    /stats                       - Get dashboard stats (Protected)
-#
-# =============================================================================

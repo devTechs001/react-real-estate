@@ -7,12 +7,11 @@
 # =============================================================================
 
 [build]
-  # Build command
-  command = "pnpm run build"
+  # Build command - install only client deps (skip workspace to avoid server native deps like gl/tfjs-node)
+  # Using --ignore-workspace and --prefer-offline to speed up builds and avoid server dependencies
+  command = "cd client && pnpm install --ignore-workspace --prefer-offline && pnpm run build"
   # Directory containing the built application
   publish = "client/dist"
-  # Functions directory for serverless functions
-  functions = "server"
 
 # Environment variables
 [build.environment]
@@ -83,21 +82,24 @@
 # =============================================================================
 
 [context.production]
-  command = "pnpm run build"
+  # Only install client deps (skip workspace to avoid server native deps like gl/tfjs-node)
+  command = "cd client && pnpm install --ignore-workspace --prefer-offline && pnpm run build"
   publish = "client/dist"
 
 [context.production.environment]
   VITE_API_URL = "https://api.yourdomain.com"
 
 [context.deploy-preview]
-  command = "pnpm run build"
+  # Only install client deps (skip workspace to avoid server native deps like gl/tfjs-node)
+  command = "cd client && pnpm install --ignore-workspace --prefer-offline && pnpm run build"
   publish = "client/dist"
 
 [context.deploy-preview.environment]
   VITE_API_URL = "https://staging-api.yourdomain.com"
 
 [context.branch-deploy]
-  command = "pnpm run build"
+  # Only install client deps (skip workspace to avoid server native deps like gl/tfjs-node)
+  command = "cd client && pnpm install --ignore-workspace --prefer-offline && pnpm run build"
   publish = "client/dist"
 
 [context.branch-deploy.environment]

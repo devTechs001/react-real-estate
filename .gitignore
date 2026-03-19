@@ -3,10 +3,22 @@ node_modules/
 package-lock.json
 yarn.lock
 
-# Environment
+# Environment (NEVER commit these - contains secrets)
 .env
 .env.local
 .env.production
+.env.*
+!.env.example
+!.env.template
+
+# Secrets & Credentials (NEVER commit)
+*.pem
+*.key
+*.crt
+secrets.json
+credentials.json
+service-account*.json
+firebase-config*.json
 
 # Build
 dist/

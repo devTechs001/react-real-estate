@@ -196,70 +196,44 @@ Copy all variables from the **Backend** section above into Render's Environment 
 
 ### Frontend (.env.example)
 ```bash
-# API Configuration
 VITE_API_URL=https://your-backend.onrender.com
-
-# Optional Features
 VITE_ENABLE_AI_FEATURES=true
 VITE_ENABLE_CHAT=true
-
-# Optional: Analytics
 VITE_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 VITE_SENTRY_DSN=https://xxx@sentry.io/xxx
 ```
 
 ### Backend (.env.example)
 ```bash
-# Server
 NODE_ENV=production
 PORT=3000
 FRONTEND_URL=https://virtualtourist.netlify.app
-
-# Database
 MONGODB_URI=mongodb+srv://devtechs842_db_user:<your_password_here>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=virtual-tour
-
-# Security
 JWT_SECRET=generate_with_openssl_rand_hex_32
-
-# Cloudinary (Required for Images)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-
-# OpenAI (Required for AI Features)
 OPENAI_API_KEY=sk-proj-your_key_here
 OPENAI_MODEL=gpt-4-turbo-preview
 OPENAI_VISION_MODEL=gpt-4-vision-preview
-
-# Stripe (Optional)
 STRIPE_SECRET_KEY=sk_test_your_key
 STRIPE_PUBLISHABLE_KEY=pk_test_your_key
 STRIPE_WEBHOOK_SECRET=whsec_your_secret
 STRIPE_PRO_PRICE_ID=price_xxx
 STRIPE_PREMIUM_PRICE_ID=price_xxx
-
-# Email (Optional)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 EMAIL_FROM=noreply@yourdomain.com
-
-# Redis (Optional)
 REDIS_HOST=redis.upstash.io
 REDIS_PORT=6379
 REDIS_PASSWORD=your_password
 REDIS_URL=redis://default:password@host:port
-
-# Google Cloud Vision (Optional)
 GOOGLE_CLOUD_PROJECT_ID=your-project-id
 GOOGLE_CLOUD_CREDENTIALS={"type":"service_account",...}
-
-# Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
-
-# File Upload
 MAX_FILE_SIZE=5242880
 UPLOAD_PATH=./uploads
 ```

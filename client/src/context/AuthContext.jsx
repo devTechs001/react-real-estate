@@ -13,19 +13,33 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        console.log('🔐 Initializing auth...');
         const token = authService.getToken();
+        console.log('🔑 Token found:', !!token);
         
         if (token) {
           // Token exists, verify with backend
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
+          try {
+            console.log('🔍 Verifying token with backend...');
+            const userData = await authService.getCurrentUser();
+            console.log('✅ Token verified, user data:', userData);
+            setUser(userData);
+          } catch (error) {
+            console.error('❌ Token verification failed:', error);
+            // Token invalid or expired, clear it
+            authService.logout();
+            setUser(null);
+          }
+        } else {
+          console.log('ℹ️ No token found, user not logged in');
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
-        // Token invalid or expired, clear it
+        console.error('🔥 Auth initialization error:', error);
+        // Clear any corrupted auth data
         authService.logout();
         setUser(null);
       } finally {
+        console.log('🏁 Auth initialization complete');
         setLoading(false);
         setIsInitialized(true);
       }
@@ -36,17 +50,22 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (email, password) => {
     try {
+      console.log('🔐 Login attempt for:', email);
       const response = await authService.login(email, password);
+      console.log('📦 Login response:', response);
 
       // Response should contain: { success: true, token, user, message }
-      if (response.user) {
+      if (response.success && response.user) {
+        console.log('✅ Login successful, setting user:', response.user);
         setUser(response.user);
         toast.success(response.message || 'Login successful!');
+        return response;
+      } else {
+        console.log('❌ Login failed:', response);
+        throw new Error(response.message || 'Login failed');
       }
-
-      return response;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('🔥 Login error:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Login failed';
       toast.error(errorMessage);
       throw error;

@@ -113,6 +113,8 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log('🔐 Login attempt:', { email, passwordProvided: !!password });
+
     // Validate fields
     if (!email || !password) {
       return res.status(400).json({ 
@@ -123,18 +125,26 @@ export const login = async (req, res) => {
 
     // Check user and include password for comparison
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+    console.log('👤 User found:', !!user);
 
     if (!user) {
+      console.log('❌ User not found');
       return res.status(401).json({ 
         success: false,
         message: 'Invalid email or password' 
       });
     }
 
+    console.log('🔑 User password exists:', !!user.password);
+    console.log('📧 User email:', user.email);
+    console.log('👑 User role:', user.role);
+
     // Check password
     const isMatch = await user.matchPassword(password);
+    console.log('🔒 Password match:', isMatch);
 
     if (!isMatch) {
+      console.log('❌ Password mismatch');
       return res.status(401).json({ 
         success: false,
         message: 'Invalid email or password' 
@@ -143,6 +153,7 @@ export const login = async (req, res) => {
 
     // Check if user is verified (skip in development)
     if (process.env.NODE_ENV !== 'development' && !user.isVerified) {
+      console.log('📧 User not verified');
       return res.status(401).json({
         success: false,
         message: 'Please verify your email address before logging in',
@@ -150,6 +161,8 @@ export const login = async (req, res) => {
         email: user.email
       });
     }
+
+    console.log('✅ Login successful for:', user.email);
 
     // Update last login
     user.lastLogin = Date.now();
@@ -174,7 +187,7 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('🔥 Login error:', error);
     res.status(500).json({ 
       success: false,
       message: 'Server error during login' 

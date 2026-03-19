@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 const AUTH_URL = `${API_URL}/auth`;
 
 // Token management
@@ -10,11 +10,14 @@ const USER_KEY = 'user_data';
 class AuthService {
   // Get stored token
   getToken() {
-    return localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
+    console.log('🔑 Getting token from storage:', !!token);
+    return token;
   }
 
   // Set token
   setToken(token) {
+    console.log('💾 Setting token in storage:', !!token);
     if (token) {
       localStorage.setItem(TOKEN_KEY, token);
     } else {
@@ -26,6 +29,7 @@ class AuthService {
   getStoredUser() {
     try {
       const userData = localStorage.getItem(USER_KEY);
+      console.log('👤 Getting user from storage:', !!userData);
       return userData ? JSON.parse(userData) : null;
     } catch (error) {
       console.error('Error parsing stored user data:', error);
@@ -35,6 +39,7 @@ class AuthService {
 
   // Set user data
   setStoredUser(user) {
+    console.log('👤 Setting user in storage:', !!user);
     if (user) {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     } else {
@@ -72,23 +77,29 @@ class AuthService {
   // Login user
   async login(email, password) {
     try {
+      console.log('🔑 AuthService login attempt:', { email, passwordProvided: !!password });
       const response = await axios.post(`${AUTH_URL}/login`, {
         email,
         password,
       });
 
+      console.log('📦 AuthService login response:', response.data);
+
       // Response format: { success, message, token, user }
       if (response.data.success && response.data.token) {
+        console.log('💾 Setting token:', response.data.token.substring(0, 20) + '...');
         this.setToken(response.data.token);
       }
 
       if (response.data.user) {
+        console.log('👤 Setting user:', response.data.user);
         this.setStoredUser(response.data.user);
       }
 
+      console.log('✅ AuthService login complete');
       return response.data;
     } catch (error) {
-      console.error('Login service error:', error.response?.data || error);
+      console.error('🔥 AuthService login error:', error.response?.data || error);
       throw error;
     }
   }

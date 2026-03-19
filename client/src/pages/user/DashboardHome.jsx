@@ -33,8 +33,16 @@ const DashboardHome = () => {
     try {
       // Try to get dashboard data from the new endpoint first
       const dashboardData = await dashboardService.getDashboardData();
-      if (dashboardData.role === 'user') {
-        setStats(dashboardData.stats);
+      console.log('DashboardHome received:', dashboardData);
+      
+      // Handle different role responses
+      if (dashboardData.role === 'user' || dashboardData.role === 'USER') {
+        setStats(dashboardData.stats || {
+          savedProperties: dashboardData.savedProperties?.length || 0,
+          inquiries: dashboardData.inquiries?.length || 0,
+          appointments: dashboardData.appointments?.length || 0,
+          viewedProperties: 0
+        });
 
         // Map the received data to the format expected by the UI
         if (dashboardData.savedProperties) {
@@ -56,10 +64,12 @@ const DashboardHome = () => {
             time: new Date(inquiry.createdAt).toLocaleDateString()
           })));
         }
+      } else {
+        // For non-user roles, use fallback data (this is expected for admin/agent users)
+        console.log('User role not user type, using fallback data');
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      toast.error('Failed to load dashboard data');
 
       // Fallback to default values
       setRecentActivity([

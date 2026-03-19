@@ -39,8 +39,17 @@ const Dashboard = () => {
       setDataLoading(true);
       // Try to get dashboard data from the new endpoint first
       const dashboardData = await dashboardService.getDashboardData();
-      if (dashboardData.role === 'user') {
-        setStats(dashboardData.stats);
+      console.log('ClientDashboard received:', dashboardData);
+      
+      // Handle different role responses
+      if (dashboardData.role === 'user' || dashboardData.role === 'USER') {
+        const statsData = dashboardData.stats || dashboardData;
+        setStats({
+          savedProperties: statsData.savedProperties || 0,
+          inquiries: statsData.inquiries || 0,
+          appointments: statsData.appointments || 0,
+          viewedProperties: statsData.viewedProperties || 0
+        });
 
         // Map the received data to the format expected by the UI
         if (dashboardData.savedProperties) {
@@ -62,8 +71,11 @@ const Dashboard = () => {
             time: new Date(inquiry.createdAt).toLocaleDateString()
           })));
         }
+        toast.success('Dashboard loaded successfully');
+      } else {
+        console.log('Role mismatch, using fallback');
+        throw new Error('Role mismatch');
       }
-      toast.success('Dashboard loaded successfully');
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       // Don't show error toast for auth errors (redirect will handle it)

@@ -29,6 +29,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const PricePrediction = lazy(() => import('./components/ai/PricePrediction'));
 
 // User Dashboard Pages (content only, no layout)
+const Dashboard = lazy(() => import('./pages/Dashboard'));
 const DashboardHome = lazy(() => import('./pages/user/DashboardHome'));
 const Favorites = lazy(() => import('./pages/client/Favorites'));
 const Inquiries = lazy(() => import('./pages/client/MyInquiries'));
@@ -89,7 +90,7 @@ function App() {
         {/* ============ USER DASHBOARD ROUTES ============ */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<DashboardHome />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/inquiries" element={<Inquiries />} />
             <Route path="/appointments" element={<Appointments />} />

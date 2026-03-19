@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Test login directly
+        fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: 'devtechs842@gmail.com',
+                password: 'pass1234'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Login test result:', data);
+            document.getElementById('results').innerHTML = `
+                <h2>Login Test Results:</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            
+            if (data.success && data.token) {
+                // Test getting current user
+                fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${data.token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(userData => {
+                    console.log('Current user test:', userData);
+                    document.getElementById('results').innerHTML += `
+                        <h2>Current User Test Results:</h2>
+                        <pre>${JSON.stringify(userData, null, 2)}</pre>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Current user test error:', error);
+                    document.getElementById('results').innerHTML += `
+                        <h2>Current User Test Error:</h2>
+                        <pre>${error.message}</pre>
+                    `;
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Login test error:', error);
+            document.getElementById('results').innerHTML = `
+                <h2>Login Test Error:</h2>
+                <pre>${error.message}</pre>
+            `;
+        });
+    </script>
+</body>
+</html>

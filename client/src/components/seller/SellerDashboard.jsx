@@ -12,6 +12,7 @@ import { dashboardService } from '../../services/dashboardService';
 import { propertyService } from '../../services/PropertyService';
 import { inquiryService } from '../../services/InquiryService';
 import { appointmentService } from '../../services/appointmentService';
+import toast from 'react-hot-toast';
 import Loader from '../common/Loader';
 
 const SellerDashboard = () => {
@@ -37,8 +38,17 @@ const SellerDashboard = () => {
       try {
         const dashboardData = await dashboardService.getDashboardData();
         console.log('Seller dashboard data:', dashboardData);
-        if (dashboardData.role === 'agent') {
-          setStats(dashboardData.stats);
+        
+        if (dashboardData.role === 'agent' || dashboardData.role === 'AGENT') {
+          const statsData = dashboardData.stats || dashboardData;
+          setStats({
+            properties: statsData.totalProperties || statsData.properties || 0,
+            inquiries: statsData.totalInquiries || statsData.inquiries || 0,
+            appointments: statsData.totalAppointments || statsData.appointments || 0,
+            totalViews: statsData.totalViews || 0,
+            pendingInquiries: statsData.unreadInquiries || statsData.pendingInquiries || 0,
+            pendingAppointments: statsData.upcomingAppointments || statsData.pendingAppointments || 0,
+          });
           // Set recent data if available in the response
           if (dashboardData.recentProperties) {
             setRecentInquiries(dashboardData.recentProperties.slice(0, 5));
@@ -46,11 +56,13 @@ const SellerDashboard = () => {
           if (dashboardData.appointments) {
             setRecentAppointments(dashboardData.appointments.slice(0, 5));
           }
+        } else {
+          console.log('Role mismatch, using fallback');
+          throw new Error('Role mismatch');
         }
         toast.success('Dashboard loaded successfully');
       } catch (dashboardError) {
         console.warn('Using fallback dashboard data:', dashboardError);
-        toast('Showing sample data', { icon: 'ℹ️' });
 
         // Fallback to sample data
         setStats({

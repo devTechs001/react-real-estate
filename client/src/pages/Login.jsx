@@ -40,7 +40,10 @@ const Login = () => {
     }
   }, []);
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || (() => {
+  // Default redirect based on user role (will be updated after login)
+  return '/dashboard';
+})();
 
   const validateForm = useCallback(() => {
     const newErrors = {};
@@ -83,7 +86,9 @@ const Login = () => {
     setErrors({});
 
     try {
+      console.log('🚀 Submitting login for:', formData.email);
       const loginResult = await login(formData.email, formData.password);
+      console.log('🎯 Login result in component:', loginResult);
 
       // Handle remember me
       if (formData.remember) {
@@ -92,14 +97,24 @@ const Login = () => {
         localStorage.removeItem('rememberedEmail');
       }
 
-      const targetPath = from;
+      // Determine redirect path based on user role
+      let targetPath = from;
+      if (loginResult.user?.role === 'admin') {
+        targetPath = '/admin';
+      } else if (loginResult.user?.role === 'seller') {
+        targetPath = '/seller';
+      } else {
+        targetPath = '/dashboard';
+      }
+      
+      console.log('📍 Navigating to:', targetPath);
       toast.success('Welcome back!');
       setLoading(false);
 
-      // Use window.location for a hard redirect to avoid React Router issues
-      window.location.href = targetPath;
+      // Use React Router's navigate instead of window.location
+      navigate(targetPath, { replace: true });
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('💥 Login submit error:', error);
 
       if (!isMounted.current) return;
 

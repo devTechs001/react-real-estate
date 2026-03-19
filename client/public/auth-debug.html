@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Debug Test</title>
+</head>
+<body>
+    <h1>Authentication Debug Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Test current auth state
+        const token = localStorage.getItem('auth_token');
+        const userData = localStorage.getItem('user_data');
+        
+        document.getElementById('results').innerHTML = `
+            <h2>Current Auth State:</h2>
+            <p><strong>Token exists:</strong> ${!!token}</p>
+            <p><strong>Token value:</strong> ${token ? token.substring(0, 50) + '...' : 'N/A'}</p>
+            <p><strong>User data exists:</strong> ${!!userData}</p>
+            <p><strong>User data:</strong> ${userData || 'N/A'}</p>
+            
+            <h2>Test Login:</h2>
+            <button onclick="testLogin()">Test Login API</button>
+            <button onclick="testDashboard()">Test Dashboard API</button>
+            <div id="api-results"></div>
+        `;
+        
+        async function testLogin() {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'devtechs842@gmail.com',
+                        password: 'pass1234'
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = `
+                    <h3>Login Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+                if (data.success) {
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user_data', JSON.stringify(data.user));
+                    location.reload();
+                }
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = `
+                    <h3>Login Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+        
+        async function testDashboard() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                document.getElementById('api-results').innerHTML = '<p>No token found - please login first</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = `
+                    <h3>Dashboard Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = `
+                    <h3>Dashboard Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -51,7 +51,7 @@ Add these in **Render Dashboard** → Web Service → Environment:
 |----------|-------------|------------|---------|
 | `NODE_ENV` | Environment | Set manually | `production` |
 | `PORT` | Server port | Set manually | `3000` |
-| `MONGODB_URI` | MongoDB connection | [MongoDB Atlas](https://cloud.mongodb.com) | `mongodb+srv://devtechs842_db_user:<password>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=omnibiz` |
+| `MONGODB_URI` | MongoDB connection | [MongoDB Atlas](https://cloud.mongodb.com) | `mongodb+srv://devtechs842_db_user:<password>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=virtual-tour` |
 | `JWT_SECRET` | JWT signing secret | Generate: `openssl rand -hex 32` | `a1b2c3d4...` (64 chars) |
 | `FRONTEND_URL` | Frontend URL for CORS | Your Netlify URL | `https://virtualtourist.netlify.app` |
 
@@ -216,7 +216,7 @@ PORT=3000
 FRONTEND_URL=https://virtualtourist.netlify.app
 
 # Database
-MONGODB_URI=mongodb+srv://devtechs842_db_user:<your_password_here>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=omnibiz
+MONGODB_URI=mongodb+srv://devtechs842_db_user:<your_password_here>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=virtual-tour
 
 # Security
 JWT_SECRET=generate_with_openssl_rand_hex_32
@@ -283,7 +283,7 @@ UPLOAD_PATH=./uploads
 ### Backend Issues
 
 **"Cannot connect to MongoDB"**
-- Verify MongoDB URI is correct (format: `mongodb+srv://devtechs842_db_user:<password>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=omnibiz`)
+- Verify MongoDB URI is correct (format: `mongodb+srv://devtechs842_db_user:<password>@cluster0.kparor6.mongodb.net/virtual-tour?retryWrites=true&w=majority&appName=virtual-tour`)
 - Replace `<password>` with your actual database user password
 - Check IP whitelist includes Render IPs (0.0.0.0/0 for all IPs)
 - Ensure database user has correct permissions

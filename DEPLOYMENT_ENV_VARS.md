@@ -14,7 +14,7 @@ Add these in **Netlify Dashboard** → Site Settings → Environment Variables:
 
 | Variable | Description | Example Value |
 |----------|-------------|---------------|
-| `VITE_API_URL` | Backend API URL | `https://your-backend.onrender.com` |
+| `VITE_API_URL` | Backend API URL | `https://virtual-touer-server.onrender.com` |
 | `VITE_ENABLE_AI_FEATURES` | Enable AI features (optional) | `true` |
 | `VITE_ENABLE_CHAT` | Enable chat feature (optional) | `true` |
 
@@ -184,10 +184,10 @@ Copy all variables from the **Backend** section above into Render's Environment 
 ### Step 3: Deploy
 - Click **Create Web Service**
 - Wait for deployment (check Logs tab)
-- Copy the service URL (e.g., `https://real-estate-api.onrender.com`)
+- Copy the service URL (e.g., `https://virtual-touer-server.onrender.com`)
 
 ### Step 4: Update Netlify
-- Add `VITE_API_URL=https://real-estate-api.onrender.com` to Netlify environment
+- Add `VITE_API_URL=https://virtual-touer-server.onrender.com` to Netlify environment
 - Trigger new deployment in Netlify
 
 ---
@@ -196,7 +196,7 @@ Copy all variables from the **Backend** section above into Render's Environment 
 
 ### Frontend (.env.example)
 ```bash
-VITE_API_URL=https://your-backend.onrender.com
+VITE_API_URL=https://virtual-touer-server.onrender.com
 VITE_ENABLE_AI_FEATURES=true
 VITE_ENABLE_CHAT=true
 VITE_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
